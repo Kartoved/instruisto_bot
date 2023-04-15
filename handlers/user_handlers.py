@@ -6,6 +6,7 @@ from aiogram.types import Message
 from aiogram.filters import Command
 from lexicon.lexicon import HELP_COMMAND
 from keyboards.keyboards import keyboard_contact
+from services.services import *
 
 router: Router = Router()
 
@@ -19,11 +20,13 @@ async def process_start_command(message: Message):
             f'users_data/{str(message.chat.id)}/unexplorer_words.json')
         with open(f'users_data/{str(message.chat.id)}/unexplorer_words.json',
                 encoding='utf-8') as f:
-            unstudied_list = json.load(f)
+            unexplorer_words = json.load(f)
         with open(f'users_data/{str(message.chat.id)}/explorer_words.json',
                 mode='w',
                 encoding='utf-8') as f:
             json.dump([], f)
+    else:
+        await process_help_command(message)
 
 @router.message(Command(commands=['help']))
 async def process_help_command(message: Message):
@@ -33,6 +36,12 @@ async def process_help_command(message: Message):
 
 @router.message(Command(commands=['contact']))
 async def contact_with_developer(message: Message):
-    '''Выводит контакты разработчика'''
+    '''выводит контакты разработчика'''
     await message.answer(text='Пиши мне про баги и слова благодарности 🥳',
                          reply_markup=keyboard_contact)
+
+@router.message(Command(commands='learning'))
+async def start_learning(message: Message):
+    """начать учить неизученные слова"""
+    chat_id = message.chat.id
+    await get_one_word(chat_id)

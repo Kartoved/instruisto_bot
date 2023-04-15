@@ -3,9 +3,10 @@ from aiogram.types import (ReplyKeyboardMarkup,
                            InlineKeyboardMarkup,
                            InlineKeyboardButton)
 
-btn_contact: InlineKeyboardButton = InlineKeyboardButton(
+btn_contact = InlineKeyboardButton(
     text='связаться с разработчиком'.capitalize(),
     url='https://ru.wikipedia.org/wiki/Эсперанто')
 
-keyboard_contact: InlineKeyboardMarkup = InlineKeyboardMarkup(
+keyboard_contact = InlineKeyboardMarkup(
     inline_keyboard=[[btn_contact]])
+
