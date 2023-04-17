@@ -7,6 +7,7 @@ from aiogram.filters import Command
 from lexicon.lexicon import HELP_COMMAND
 from keyboards.keyboards import keyboard_contact
 from services.services import *
+from handlers.callbacks import *
 
 router: Router = Router()
 
@@ -17,11 +18,8 @@ async def process_start_command(message: Message):
         makedirs(f'users_data/{str(message.chat.id)}', exist_ok=True)
         copy('dictionary.json', f'users_data/{str(message.chat.id)}')
         rename(f'users_data/{str(message.chat.id)}/dictionary.json',
-            f'users_data/{str(message.chat.id)}/unexplorer_words.json')
-        with open(f'users_data/{str(message.chat.id)}/unexplorer_words.json',
-                encoding='utf-8') as f:
-            unexplorer_words = json.load(f)
-        with open(f'users_data/{str(message.chat.id)}/explorer_words.json',
+            f'users_data/{str(message.chat.id)}/unexplored_words.json')
+        with open(f'users_data/{str(message.chat.id)}/explored_words.json',
                 mode='w',
                 encoding='utf-8') as f:
             json.dump([], f)
@@ -44,4 +42,5 @@ async def contact_with_developer(message: Message):
 async def start_learning(message: Message):
     """начать учить неизученные слова"""
     chat_id = message.chat.id
-    await get_one_word(chat_id)
+    await get_unexplored_word(chat_id)
+

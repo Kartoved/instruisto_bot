@@ -1,14 +1,16 @@
 import asyncio
 
 from aiogram import Bot, Dispatcher
-from config_data.config import *
-from handlers import user_handlers
+from config_data.config import bot, config
+from handlers import user_handlers, callbacks
 
 
 async def main():
     dp: Dispatcher = Dispatcher()
 
     dp.include_router(user_handlers.router)
+    dp.include_router(callbacks.router)
+    
 
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
