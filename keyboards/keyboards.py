@@ -15,8 +15,8 @@ keyboard_contact = InlineKeyboardMarkup(
 
 # инлайн-клавиатура добавить слово в список знакомых слов
 btn_add_word = InlineKeyboardButton(
-    text='добавить слово в словарь',
-    callback_data='add')
+    text='следующее слово',
+    callback_data='get next word')
 
 keyboard_add_word = InlineKeyboardMarkup(inline_keyboard=[[btn_add_word]])
 

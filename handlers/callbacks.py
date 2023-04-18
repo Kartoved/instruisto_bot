@@ -7,8 +7,12 @@ from services.services import *
 
 router = Router()
 
-@router.callback_query(Text(text='add'))
+
+@router.callback_query(Text(text='get next word'))
 async def add_word(callback: CallbackQuery):
     chat_id = callback.from_user.id
     await callback.answer(text='работает, епта!')
-    export_to_unexplored_words(chat_id=chat_id)
+    explored_words = import_explored_words(chat_id=chat_id)
+    await get_unexplored_word(chat_id=chat_id)
+    export_explored_words(chat_id=chat_id)
+    

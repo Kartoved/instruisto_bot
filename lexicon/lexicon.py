@@ -15,3 +15,6 @@ HELP_COMMAND = '''Привет, эсперантист!
 LEXICON_RU = {
 }
 
+
+def format_learning_message(new_word: dict):
+    return f'''❓Как будет <em>"{new_word['на русском']}"</em> на Эсперанто?\n➡️ Ответ: <em><tg-spoiler>{new_word['на эсперанто']}</tg-spoiler></em>\n☝️ Пример предложения: <em><tg-spoiler>{new_word['пример предложения']}</tg-spoiler></em>'''
