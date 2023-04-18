@@ -2,7 +2,7 @@ from aiogram import Router
 from aiogram.types import CallbackQuery
 from aiogram.filters import Text
 from keyboards.keyboards import *
-# from services.services import add_word_to_expored_words
+from services.services import *
 
 
 router = Router()
@@ -11,4 +11,4 @@ router = Router()
 async def add_word(callback: CallbackQuery):
     chat_id = callback.from_user.id
     await callback.answer(text='работает, епта!')
-    # await add_word_to_expored_words(chat_id=chat_id)
+    export_to_unexplored_words(chat_id=chat_id)

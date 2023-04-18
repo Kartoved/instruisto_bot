@@ -14,3 +14,4 @@ HELP_COMMAND = '''Привет, эсперантист!
 
 LEXICON_RU = {
 }
+
