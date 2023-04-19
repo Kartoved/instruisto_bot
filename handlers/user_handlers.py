@@ -42,6 +42,7 @@ async def contact_with_developer(message: Message):
 async def start_learning(message: Message):
     """начать учить неизученные слова"""
     chat_id = message.chat.id
-    import_unexpored_words(chat_id=message.chat.id)
-    await get_unexplored_word(chat_id)
-
+    import_explored_words(chat_id)
+    import_unexplored_words(chat_id)
+    new_word = await get_unexplored_word(chat_id)
+    export_explored_words(chat_id, new_word)
