@@ -4,23 +4,21 @@ from config_data.config import *
 import datetime
 from keyboards.keyboards import *
 from aiogram.types import Message
-from lexicon.lexicon import format_learning_message
+from lexicon.lexicon import format_learning_message, format_training_message
 
 
-async def get_unexplored_word(chat_id: int):
+async def get_unexplored_word(chat_id: int) -> dict:
     '''выдаёт одно слово из списка неизученных'''
     global unexplored_words
     if unexplored_words:
         new_word = unexplored_words.pop(0)
-        await bot.send_message(text=format_learning_message(new_word=new_word),
+        await bot.send_message(text=format_learning_message(new_word),
                                chat_id=chat_id,
                                reply_markup=keyboard_add_word)
     else:
-        await bot.send_message(text='Все слова изучены. Новых слов нет',
+        await bot.send_message(text='Все слова изучены. Новых слов нет.',
                                chat_id=chat_id)
     return new_word
-
-
 
 
 def change_date(date: datetime, value: int) -> datetime:
@@ -28,7 +26,7 @@ def change_date(date: datetime, value: int) -> datetime:
     date = datetime.datetime.strptime(date, '%d-%m-%Y')
     next_week = date + datetime.timedelta(days=value)
     return next_week.strftime('%d-%m-%Y')
-        
+
 
 def check_coefficient(word: dict, value: int) -> dict:
     '''проверяет текущий коэффициент и изменяет его'''
@@ -50,12 +48,16 @@ def check_coefficient(word: dict, value: int) -> dict:
     return word
 
 
-
-
-
-
-
-
+async def get_explored_word(chat_id: int, explored_words: list) -> dict:
+    for word in explored_words:
+        word['дата повторения'] = datetime.datetime.strptime(
+            word['дата повторения'], "%d-%m-%Y")
+        if word['дата повторения'] <= datetime.datetime.now():
+            return await bot.send_message(text=format_training_message(word),
+                                   chat_id=chat_id,
+                                   reply_markup=keyboard_check_word)
+    return await bot.send_message(text='На сегодня слов для повторения нет.',
+                                chat_id=chat_id)
 
 
 def import_unexplored_words(chat_id: int) -> list:
@@ -86,5 +88,5 @@ def export_explored_words(chat_id: int, new_word: dict):
     if new_word not in explored_words:
         explored_words.append(new_word)
         with open(f'users_data/{str(chat_id)}/explored_words.json',
-                encoding='utf-8', mode='w') as f:
+                  encoding='utf-8', mode='w') as f:
             json.dump(explored_words, f, ensure_ascii=False)

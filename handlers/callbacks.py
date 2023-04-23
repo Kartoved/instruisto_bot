@@ -16,3 +16,10 @@ async def add_word(callback: CallbackQuery):
     new_word = check_coefficient(new_word, new_word['коэффициент'])
     export_unexplored_words(chat_id)
     export_explored_words(chat_id, new_word)
+    
+    
+@router.callback_query(Text(text='помню'))
+async def remember_word(callback: CallbackQuery):
+    chat_id = callback.from_user.id
+    await callback.answer('bonege!')
+    check_coefficient(word, word['коэффициент'])

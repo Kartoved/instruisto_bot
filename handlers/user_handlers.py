@@ -40,7 +40,7 @@ async def contact_with_developer(message: Message):
 
 @router.message(Command(commands='learning'))
 async def start_learning(message: Message):
-    """начать учить неизученные слова"""
+    '''начать учить неизученные слова'''
     chat_id = message.chat.id
     import_explored_words(chat_id)
     import_unexplored_words(chat_id)
@@ -48,3 +48,11 @@ async def start_learning(message: Message):
     new_word = check_coefficient(new_word, new_word['коэффициент'])
     export_unexplored_words(chat_id)
     export_explored_words(chat_id, new_word)
+
+
+@router.message(Command(commands='training'))
+async def start_training(message: Message):
+    '''повторение изученных слов'''
+    chat_id = message.chat.id
+    explored_words = import_explored_words(chat_id)
+    await get_explored_word(chat_id, explored_words)
