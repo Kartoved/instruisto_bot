@@ -17,4 +17,8 @@ LEXICON_RU = {
 
 
 def format_learning_message(new_word: dict):
-    return f'''❓Как будет <em>"{new_word['на русском']}"</em> на Эсперанто?\n➡️ Ответ: <em><tg-spoiler>{new_word['на эсперанто']}</tg-spoiler></em>\n☝️ Пример предложения: <em><tg-spoiler>{new_word['пример предложения']}</tg-spoiler></em>'''
+    return f'''📌 <em>{new_word['на русском'].title()}</em> ➡️ <em>{new_word['на эсперанто'].upper()}</em>\n☝️ Пример предложения: <em>{new_word['пример предложения'].capitalize()}</em>'''
+
+
+def format_training_message(new_word: dict):
+    return f'''❓Как будет <em>{new_word['на русском']}</em> на Эсперанто?\n➡️ Ответ: <em><tg-spoiler>{new_word['на эсперанто']}</tg-spoiler></em>\n☝️ Пример предложения: <em><tg-spoiler>{new_word['пример предложения']}</tg-spoiler></em>'''

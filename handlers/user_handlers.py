@@ -45,4 +45,6 @@ async def start_learning(message: Message):
     import_explored_words(chat_id)
     import_unexplored_words(chat_id)
     new_word = await get_unexplored_word(chat_id)
+    new_word = check_coefficient(new_word, new_word['коэффициент'])
+    export_unexplored_words(chat_id)
     export_explored_words(chat_id, new_word)
