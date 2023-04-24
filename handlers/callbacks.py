@@ -22,4 +22,8 @@ async def add_word(callback: CallbackQuery):
 async def remember_word(callback: CallbackQuery):
     chat_id = callback.from_user.id
     await callback.answer('bonege!')
-    check_coefficient(word, word['коэффициент'])
+    explored_words = import_explored_words(chat_id)
+    word = get_explored_word2(explored_words)
+    explored_words.remove(word)
+    word = check_and_change_coefficient(word, word['коэффициент'], True)
+    export_explored_words(chat_id, word)

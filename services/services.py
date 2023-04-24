@@ -21,43 +21,53 @@ async def get_unexplored_word(chat_id: int) -> dict:
     return new_word
 
 
-def change_date(date: datetime, value: int) -> datetime:
+def change_date(value: int) -> str:
     '''меняет дату повторения слова'''
-    date = datetime.datetime.strptime(date, '%d-%m-%Y')
-    next_week = date + datetime.timedelta(days=value)
-    return next_week.strftime('%d-%m-%Y')
+    date = datetime.datetime.now()
+    date = date + datetime.timedelta(days=value)
+    return date.strftime('%d-%m-%Y')
 
 
-def check_coefficient(word: dict, value: int) -> dict:
+def check_and_change_coefficient(word: dict, value: int, remember: bool) -> dict:
     '''проверяет текущий коэффициент и изменяет его'''
+    if remember and value < 6:
+        value += 1
+    elif not remember and value > 0:
+        value -= 1
+    word['коэффициент'] = value
     if value <= 0:
-        word['дата повторения'] = datetime.datetime.now().strftime('%d-%m-%Y')
-        word['дата повторения'] = change_date(word['дата повторения'], 1)
+        word['дата повторения'] = str(change_date(1))
     elif value == 1:
-        word['дата повторения'] = change_date(word['дата повторения'], 2)
+        word['дата повторения'] = str(change_date(2))
     elif value == 2:
-        word['дата повторения'] = change_date(word['дата повторения'], 7)
+        word['дата повторения'] = str(change_date(7))
     elif value == 3:
-        word['дата повторения'] = change_date(word['дата повторения'], 14)
+        word['дата повторения'] = str(change_date(14))
     elif value == 4:
-        word['дата повторения'] = change_date(word['дата повторения'], 28)
+        word['дата повторения'] = str(change_date(28))
     elif value == 5:
-        word['дата повторения'] = change_date(word['дата повторения'], 84)
+        word['дата повторения'] = str(change_date(84))
     elif value == 6:
-        word['дата повторения'] = change_date(word['дата повторения'], 168)
+        word['дата повторения'] = str(change_date(168))
+    else:
+        word['дата повторения'] = 'str(change_date(168))'
     return word
 
 
 async def get_explored_word(chat_id: int, explored_words: list) -> dict:
     for word in explored_words:
-        word['дата повторения'] = datetime.datetime.strptime(
-            word['дата повторения'], "%d-%m-%Y")
-        if word['дата повторения'] <= datetime.datetime.now():
+        if datetime.datetime.strptime(
+                word['дата повторения'], "%d-%m-%Y") <= datetime.datetime.now():
             return await bot.send_message(text=format_training_message(word),
                                    chat_id=chat_id,
                                    reply_markup=keyboard_check_word)
     return await bot.send_message(text='На сегодня слов для повторения нет.',
                                 chat_id=chat_id)
+    
+def get_explored_word2(explored_words: list) -> dict:
+    for word in explored_words:
+        if datetime.datetime.strptime(word['дата повторения'], "%d-%m-%Y") <= datetime.datetime.now():
+            return word
 
 
 def import_unexplored_words(chat_id: int) -> list:

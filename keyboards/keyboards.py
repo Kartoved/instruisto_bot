@@ -26,7 +26,7 @@ btn_forgot = InlineKeyboardButton(
     url='https://ru.wikipedia.org/wiki/Эсперанто')
 btn_remember = InlineKeyboardButton(
     text='помню',
-    url='https://ru.wikipedia.org/wiki/Эсперанто')
+    callback_data='помню')
 
 keyboard_check_word = InlineKeyboardMarkup(
     inline_keyboard=[[btn_forgot, btn_remember]])
