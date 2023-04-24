@@ -7,7 +7,7 @@ from aiogram.filters import Command
 from lexicon.lexicon import HELP_COMMAND
 from keyboards.keyboards import keyboard_contact
 from services.services import *
-from handlers.callbacks import *
+from lexicon.callbacks import *
 
 router: Router = Router()
 
@@ -50,9 +50,9 @@ async def start_learning(message: Message):
     export_explored_words(chat_id, new_word)
 
 
-@router.message(Command(commands='training'))
-async def start_training(message: Message):
+@router.message(Command(commands='repeating'))
+async def start_repeating(message: Message):
     '''повторение изученных слов'''
     chat_id = message.chat.id
     explored_words = import_explored_words(chat_id)
-    await get_explored_word(chat_id, explored_words)
+    await send_explored_word(chat_id, explored_words)

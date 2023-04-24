@@ -8,7 +8,7 @@ HELP_COMMAND = '''Привет, эсперантист!
 <strong>/contact</strong> - <em>связаться с разработчиком</em>
 <strong>/links</strong> - <em>полезные ссылки</em>
 <strong>/learning</strong> - <em>учить новые слова</em>
-<strong>/training</strong> - <em>запоминать изученные слова</em>
+<strong>/repeating</strong> - <em>повторять изученные слова</em>
 '''
 
 
@@ -20,5 +20,5 @@ def format_learning_message(new_word: dict):
     return f'''📌 <em>{new_word['на русском'].title()}</em> ➡️ <em>{new_word['на эсперанто'].upper()}</em>\n☝️ Пример предложения: <em>{new_word['пример предложения'].capitalize()}</em>'''
 
 
-def format_training_message(word: dict):
+def format_repeating_message(word: dict):
     return f'''❓Как будет <em>{word['на русском']}</em> на Эсперанто?\n➡️ Ответ: <em><tg-spoiler>{word['на эсперанто']}</tg-spoiler></em>\n☝️ Пример предложения: <em><tg-spoiler>{word['пример предложения']}</tg-spoiler></em>'''

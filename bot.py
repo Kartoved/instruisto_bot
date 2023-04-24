@@ -2,7 +2,8 @@ import asyncio
 
 from aiogram import Bot, Dispatcher
 from config_data.config import bot, config
-from handlers import user_handlers, callbacks
+from handlers import user_handlers
+from lexicon import callbacks
 
 
 async def main():

@@ -1,10 +1,9 @@
 import json
 import asyncio
 from config_data.config import *
-import datetime
+from datetime import datetime, timedelta
 from keyboards.keyboards import *
-from aiogram.types import Message
-from lexicon.lexicon import format_learning_message, format_training_message
+from lexicon.lexicon import format_learning_message, format_repeating_message
 
 
 async def get_unexplored_word(chat_id: int) -> dict:
@@ -23,8 +22,8 @@ async def get_unexplored_word(chat_id: int) -> dict:
 
 def change_date(value: int) -> str:
     '''меняет дату повторения слова'''
-    date = datetime.datetime.now()
-    date = date + datetime.timedelta(days=value)
+    date = datetime.now()
+    date = date + timedelta(days=value)
     return date.strftime('%d-%m-%Y')
 
 
@@ -54,19 +53,19 @@ def check_and_change_coefficient(word: dict, value: int, remember: bool) -> dict
     return word
 
 
-async def get_explored_word(chat_id: int, explored_words: list) -> dict:
+async def send_explored_word(chat_id: int, explored_words: list) -> dict:
     for word in explored_words:
-        if datetime.datetime.strptime(
-                word['дата повторения'], "%d-%m-%Y") <= datetime.datetime.now():
-            return await bot.send_message(text=format_training_message(word),
-                                   chat_id=chat_id,
-                                   reply_markup=keyboard_check_word)
+        if datetime.strptime(word['дата повторения'], "%d-%m-%Y") <= datetime.now():
+            return await bot.send_message(text=format_repeating_message(word),
+                                          chat_id=chat_id,
+                                          reply_markup=keyboard_check_word)
     return await bot.send_message(text='На сегодня слов для повторения нет.',
-                                chat_id=chat_id)
-    
-def get_explored_word2(explored_words: list) -> dict:
+                                  chat_id=chat_id)
+
+
+def get_explored_word(explored_words: list) -> dict:
     for word in explored_words:
-        if datetime.datetime.strptime(word['дата повторения'], "%d-%m-%Y") <= datetime.datetime.now():
+        if datetime.strptime(word['дата повторения'], "%d-%m-%Y") <= datetime.now():
             return word
 
 
@@ -78,19 +77,19 @@ def import_unexplored_words(chat_id: int) -> list:
     return unexplored_words
 
 
-def export_unexplored_words(chat_id: int):
-    global unexplored_words
-    with open(f'users_data/{str(chat_id)}/unexplored_words.json',
-              encoding='utf-8', mode='w') as f:
-        json.dump(unexplored_words, f, ensure_ascii=False)
-
-
 def import_explored_words(chat_id: int) -> list:
     global explored_words
     with open(f'users_data/{str(chat_id)}/explored_words.json',
               encoding='utf-8') as file:
         explored_words = json.load(file)
     return explored_words
+
+
+def export_unexplored_words(chat_id: int):
+    global unexplored_words
+    with open(f'users_data/{str(chat_id)}/unexplored_words.json',
+              encoding='utf-8', mode='w') as f:
+        json.dump(unexplored_words, f, ensure_ascii=False)
 
 
 def export_explored_words(chat_id: int, new_word: dict):
