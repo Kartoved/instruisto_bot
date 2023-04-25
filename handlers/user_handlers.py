@@ -42,17 +42,20 @@ async def contact_with_developer(message: Message):
 async def start_learning(message: Message):
     '''начать учить неизученные слова'''
     chat_id = message.chat.id
-    import_explored_words(chat_id)
-    import_unexplored_words(chat_id)
-    new_word = await get_unexplored_word(chat_id)
-    new_word = check_coefficient(new_word, new_word['коэффициент'])
-    export_unexplored_words(chat_id)
-    export_explored_words(chat_id, new_word)
+    explored_words = import_words(chat_id, 'explored_words')
+    unexplored_words = import_words(chat_id, 'unexplored_words')
+    new_word = await get_unexplored_word(chat_id, unexplored_words)
+    if new_word:
+        new_word = check_and_change_coefficient(new_word, new_word['коэффициент'])
+        export_words(chat_id, unexplored_words, 'unexplored_words')
+        if new_word not in explored_words:
+            explored_words.append(new_word)
+            export_words(chat_id, explored_words, 'explored_words')
 
 
 @router.message(Command(commands='repeating'))
 async def start_repeating(message: Message):
     '''повторение изученных слов'''
     chat_id = message.chat.id
-    explored_words = import_explored_words(chat_id)
+    explored_words = import_words(chat_id, 'explored_words')
     await send_explored_word(chat_id, explored_words)

@@ -1,23 +1,22 @@
 import json
-import asyncio
 from config_data.config import *
 from datetime import datetime, timedelta
 from keyboards.keyboards import *
 from lexicon.lexicon import format_learning_message, format_repeating_message
 
 
-async def get_unexplored_word(chat_id: int) -> dict:
+async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
     '''выдаёт одно слово из списка неизученных'''
-    global unexplored_words
     if unexplored_words:
         new_word = unexplored_words.pop(0)
         await bot.send_message(text=format_learning_message(new_word),
                                chat_id=chat_id,
                                reply_markup=keyboard_add_word)
+        
+        return new_word
     else:
         await bot.send_message(text='Все слова изучены. Новых слов нет.',
                                chat_id=chat_id)
-    return new_word
 
 
 def change_date(value: int) -> str:
@@ -27,7 +26,7 @@ def change_date(value: int) -> str:
     return date.strftime('%d-%m-%Y')
 
 
-def check_and_change_coefficient(word: dict, value: int, remember: bool) -> dict:
+def check_and_change_coefficient(word: dict, value: int, remember: bool = True) -> dict:
     '''проверяет текущий коэффициент и изменяет его'''
     if remember and value < 6:
         value += 1
@@ -54,6 +53,7 @@ def check_and_change_coefficient(word: dict, value: int, remember: bool) -> dict
 
 
 async def send_explored_word(chat_id: int, explored_words: list) -> dict:
+    '''отправить пользователю изученное слово'''
     for word in explored_words:
         if datetime.strptime(word['дата повторения'], "%d-%m-%Y") <= datetime.now():
             return await bot.send_message(text=format_repeating_message(word),
@@ -64,38 +64,25 @@ async def send_explored_word(chat_id: int, explored_words: list) -> dict:
 
 
 def get_explored_word(explored_words: list) -> dict:
+    '''получить слово из списка изученных'''
     for word in explored_words:
         if datetime.strptime(word['дата повторения'], "%d-%m-%Y") <= datetime.now():
             return word
 
 
-def import_unexplored_words(chat_id: int) -> list:
-    global unexplored_words
-    with open(f'users_data/{str(chat_id)}/unexplored_words.json',
-              encoding='utf-8') as file:
-        unexplored_words = json.load(file)
-    return unexplored_words
+def import_words(chat_id: int, list_name: str) -> list:
+    '''импортирует список слов в программу'''
+    with open(f'users_data/{str(chat_id)}/{list_name}.json',
+              encoding='utf-8') as f:
+        list_of_words = json.load(f)
+    return list_of_words
 
 
-def import_explored_words(chat_id: int) -> list:
-    global explored_words
-    with open(f'users_data/{str(chat_id)}/explored_words.json',
-              encoding='utf-8') as file:
-        explored_words = json.load(file)
-    return explored_words
+def export_words(chat_id: int, list_of_words: list, list_name: str):
+    '''экспортирует слова в выбранный список слов'''
+    with open(f'users_data/{str(chat_id)}/{list_name}.json',
+              encoding='utf-8',
+              mode='w') as f:
+        json.dump(list_of_words, f, ensure_ascii=False)
 
 
-def export_unexplored_words(chat_id: int):
-    global unexplored_words
-    with open(f'users_data/{str(chat_id)}/unexplored_words.json',
-              encoding='utf-8', mode='w') as f:
-        json.dump(unexplored_words, f, ensure_ascii=False)
-
-
-def export_explored_words(chat_id: int, new_word: dict):
-    global explored_words
-    if new_word not in explored_words:
-        explored_words.append(new_word)
-        with open(f'users_data/{str(chat_id)}/explored_words.json',
-                  encoding='utf-8', mode='w') as f:
-            json.dump(explored_words, f, ensure_ascii=False)

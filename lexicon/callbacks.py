@@ -8,42 +8,51 @@ from services.services import *
 router = Router()
 
 
-@router.callback_query(Text(text='get next word'))
-async def add_word(callback: CallbackQuery):
+@router.callback_query(Text(text='get next unexplored word'))
+async def get_next_unexplored_word(callback: CallbackQuery):
     chat_id = callback.from_user.id
     await callback.answer()
-    new_word = await get_unexplored_word(chat_id=chat_id)
-    new_word = check_coefficient(new_word, new_word['коэффициент'])
-    export_unexplored_words(chat_id)
-    export_explored_words(chat_id, new_word)
+    unexplored_words = import_words(chat_id, 'unexplored_words')
+    explored_words = import_words(chat_id, 'explored_words')
+    new_word = await get_unexplored_word(chat_id, unexplored_words)
+    if new_word:
+        new_word = check_and_change_coefficient(new_word, new_word['коэффициент'])
+        export_words(chat_id, unexplored_words, 'unexplored_words')
+        if new_word not in explored_words:
+            explored_words.append(new_word)
+            export_words(chat_id, explored_words, 'explored_words')
 
 
 @router.callback_query(Text(text='remember'))
-async def remember_word(callback: CallbackQuery):
+async def remember(callback: CallbackQuery):
     chat_id = callback.from_user.id
     await callback.answer('bonege!')
-    explored_words = import_explored_words(chat_id)
+    explored_words = import_words(chat_id, 'explored_words')
     word = get_explored_word(explored_words)
     explored_words.remove(word)
     word = check_and_change_coefficient(word, word['коэффициент'], True)
-    export_explored_words(chat_id, word)
+    if word not in explored_words:
+        explored_words.append(word)
+        export_words(chat_id, explored_words, 'explored_words')
     await send_explored_word(chat_id, explored_words)
 
 
 @router.callback_query(Text(text='forgot'))
-async def forgot_word(callback: CallbackQuery):
+async def forgot(callback: CallbackQuery):
     chat_id = callback.from_user.id
     await callback.answer()
-    explored_words = import_explored_words(chat_id)
+    explored_words = import_words(chat_id, 'explored_words')
     word = get_explored_word(explored_words)
     explored_words.remove(word)
     word = check_and_change_coefficient(word, word['коэффициент'], False)
-    export_explored_words(chat_id, word)
+    if word not in explored_words:
+        explored_words.append(word)
+        export_words(chat_id, explored_words, 'explored_words')
     await send_explored_word(chat_id, explored_words)
 
 
 @router.callback_query(Text(text='stop'))
-async def forgot_word(callback: CallbackQuery):
+async def stop(callback: CallbackQuery):
     chat_id = callback.from_user.id
     await callback.answer('trejnado ĉesis')
     await bot.send_message(text='Повторение слов остановлено', chat_id=chat_id)
