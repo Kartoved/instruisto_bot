@@ -5,6 +5,7 @@ from keyboards.keyboards import *
 from lexicon.lexicon import format_learning_message, format_repeating_message
 
 
+
 async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
     '''выдаёт одно слово из списка неизученных'''
     if unexplored_words:
@@ -84,5 +85,3 @@ def export_words(chat_id: int, list_of_words: list, list_name: str):
               encoding='utf-8',
               mode='w') as f:
         json.dump(list_of_words, f, ensure_ascii=False)
-
-

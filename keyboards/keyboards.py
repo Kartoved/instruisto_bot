@@ -32,3 +32,12 @@ btn_stop = InlineKeyboardButton(
     callback_data='stop')
 keyboard_check_word = InlineKeyboardMarkup(
     inline_keyboard=[[btn_forgot, btn_stop, btn_remember]])
+
+
+# инлайн-клавиатура для старта
+btn_curve = InlineKeyboardButton(
+    text='Кривая Эббингауза на Википедии',
+    url='https://ru.wikipedia.org/wiki/Кривая_забывания')
+
+keybord_start = InlineKeyboardMarkup(
+    inline_keyboard=[[btn_curve]])
