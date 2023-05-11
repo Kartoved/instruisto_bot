@@ -6,7 +6,7 @@ from aiogram.types import (ReplyKeyboardMarkup,
 
 # инлайн-клавиатура для связи с разработчиком
 btn_contact = InlineKeyboardButton(
-    text='связаться с разработчиком'.capitalize(),
+    text='написать сообщение разработчику',
     url='https://ru.wikipedia.org/wiki/Эсперанто')
 
 keyboard_contact = InlineKeyboardMarkup(
@@ -22,13 +22,13 @@ keyboard_add_word = InlineKeyboardMarkup(inline_keyboard=[[btn_add_word]])
 
 # инлайн-клавиатура для помню/не помню
 btn_forgot = InlineKeyboardButton(
-    text='не помню',
+    text='❌ не помню',
     callback_data='forgot')
 btn_remember = InlineKeyboardButton(
-    text='помню',
+    text='✅ помню',
     callback_data='remember')
 btn_stop = InlineKeyboardButton(
-    text='стоп',
+    text='⏹ стоп',
     callback_data='stop')
 keyboard_check_word = InlineKeyboardMarkup(
     inline_keyboard=[[btn_forgot, btn_stop, btn_remember]])
@@ -36,7 +36,7 @@ keyboard_check_word = InlineKeyboardMarkup(
 
 # инлайн-клавиатура для старта
 btn_curve = InlineKeyboardButton(
-    text='Кривая Эббингауза на Википедии',
+    text='Кривая Эббингауза. Википедии',
     url='https://ru.wikipedia.org/wiki/Кривая_забывания')
 
 keybord_start = InlineKeyboardMarkup(

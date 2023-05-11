@@ -4,7 +4,7 @@ from shutil import copy
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
-from lexicon.lexicon import HELP_COMMAND
+from lexicon.lexicon import HELP_COMMAND, CONTACT
 from keyboards.keyboards import keyboard_contact, keybord_start
 from services.services import *
 from lexicon.callbacks import *
@@ -44,7 +44,7 @@ async def process_help_command(message: Message):
 @router.message(Command(commands=['contact']))
 async def contact_with_developer(message: Message):
     '''выводит контакты разработчика'''
-    await message.answer(text='Пиши мне про баги и слова благодарности 🥳',
+    await message.answer(text=CONTACT,
                          reply_markup=keyboard_contact)
 
 
