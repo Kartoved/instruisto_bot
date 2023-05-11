@@ -2,6 +2,7 @@ import json
 from config_data.config import *
 from datetime import datetime, timedelta
 from keyboards.keyboards import *
+from config_data.config import SALT
 from lexicon.lexicon import format_learning_message, format_repeating_message
 
 
@@ -49,7 +50,7 @@ def check_and_change_coefficient(word: dict, value: int, remember: bool = True) 
     elif value == 6:
         word['дата повторения'] = str(change_date(168))
     else:
-        word['дата повторения'] = 'str(change_date(168))'
+        word['дата повторения'] = str(change_date(168))
     return word
 
 
@@ -71,17 +72,18 @@ def get_explored_word(explored_words: list) -> dict:
             return word
 
 
-def import_words(chat_id: int, list_name: str) -> list:
+def import_words(chat_id: str, list_name: str) -> list:
     '''импортирует список слов в программу'''
-    with open(f'users_data/{str(chat_id)}/{list_name}.json',
+    
+    with open(f'users_data/{chat_id}/{list_name}.json',
               encoding='utf-8') as f:
         list_of_words = json.load(f)
     return list_of_words
 
 
-def export_words(chat_id: int, list_of_words: list, list_name: str):
+def export_words(chat_id: str, list_of_words: list, list_name: str):
     '''экспортирует слова в выбранный список слов'''
-    with open(f'users_data/{str(chat_id)}/{list_name}.json',
+    with open(f'users_data/{chat_id}/{list_name}.json',
               encoding='utf-8',
               mode='w') as f:
         json.dump(list_of_words, f, ensure_ascii=False)

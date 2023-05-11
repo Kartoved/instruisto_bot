@@ -4,11 +4,11 @@ from config_data.config import bot, config
 from handlers import user_handlers
 from lexicon import callbacks
 from keyboards.set_menu import set_main_menu
+from datetime import datetime
 
 
 async def main():
     dp: Dispatcher = Dispatcher()
-
     dp.include_router(user_handlers.router)
     dp.include_router(callbacks.router)
 
