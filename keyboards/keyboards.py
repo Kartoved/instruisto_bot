@@ -4,21 +4,16 @@ from aiogram.types import (ReplyKeyboardMarkup,
                            InlineKeyboardButton)
 
 
-# инлайн-клавиатура для связи с разработчиком
-btn_contact = InlineKeyboardButton(
-    text='написать сообщение разработчику',
-    url='https://ru.wikipedia.org/wiki/Эсперанто')
-
-keyboard_contact = InlineKeyboardMarkup(
-    inline_keyboard=[[btn_contact]])
-
-
 # инлайн-клавиатура добавить слово в список знакомых слов
+btn_stop_learning = InlineKeyboardButton(
+    text='⏹ стоп',
+    callback_data='stop learning')
 btn_add_word = InlineKeyboardButton(
-    text='следующее слово',
+    text='➡️ следующее слово',
     callback_data='get next unexplored word')
 
-keyboard_add_word = InlineKeyboardMarkup(inline_keyboard=[[btn_add_word]])
+keyboard_add_word = InlineKeyboardMarkup(
+    inline_keyboard=[[btn_stop_learning, btn_add_word]])
 
 # инлайн-клавиатура для помню/не помню
 btn_forgot = InlineKeyboardButton(
@@ -27,11 +22,11 @@ btn_forgot = InlineKeyboardButton(
 btn_remember = InlineKeyboardButton(
     text='✅ помню',
     callback_data='remember')
-btn_stop = InlineKeyboardButton(
+btn_stop_repeating = InlineKeyboardButton(
     text='⏹ стоп',
-    callback_data='stop')
+    callback_data='stop repeating')
 keyboard_check_word = InlineKeyboardMarkup(
-    inline_keyboard=[[btn_forgot, btn_stop, btn_remember]])
+    inline_keyboard=[[btn_forgot, btn_stop_repeating, btn_remember]])
 
 
 # инлайн-клавиатура для старта

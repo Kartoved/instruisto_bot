@@ -1,8 +1,10 @@
+import hashlib
 from aiogram import Router
 from aiogram.types import CallbackQuery
 from aiogram.filters import Text
 from keyboards.keyboards import *
 from services.services import *
+
 
 
 router = Router()
@@ -57,8 +59,14 @@ async def forgot(callback: CallbackQuery):
     await send_explored_word(chat_id, explored_words)
 
 
-@router.callback_query(Text(text='stop'))
+@router.callback_query(Text(text='stop repeating'))
 async def stop(callback: CallbackQuery):
     chat_id = callback.from_user.id
     await callback.answer('trejnado ĉesis')
-    await bot.send_message(text='Повторение слов остановлено', chat_id=chat_id)
+    await bot.send_message(text='Повторение слов остановлено.', chat_id=chat_id)
+    
+@router.callback_query(Text(text='stop learning'))
+async def stop_learning(callback: CallbackQuery):
+    chat_id = callback.from_user.id
+    await callback.answer('trejnado ĉesis')
+    await bot.send_message(text='Изучение новых слов остановлено.', chat_id=chat_id)

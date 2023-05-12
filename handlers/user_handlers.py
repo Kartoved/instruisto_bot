@@ -1,3 +1,4 @@
+import hashlib
 import json
 from os import makedirs, rename, path
 from shutil import copy
@@ -5,11 +6,9 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 from lexicon.lexicon import HELP_COMMAND, CONTACT
-from keyboards.keyboards import keyboard_contact, keybord_start
-from services.services import *
+from keyboards.keyboards import keybord_start
 from lexicon.callbacks import *
-import hashlib
-
+from services.services import *
 
 
 router: Router = Router()
@@ -41,13 +40,6 @@ async def process_help_command(message: Message):
                          reply_markup=keybord_start)
 
 
-@router.message(Command(commands=['contact']))
-async def contact_with_developer(message: Message):
-    '''выводит контакты разработчика'''
-    await message.answer(text=CONTACT,
-                         reply_markup=keyboard_contact)
-
-
 @router.message(Command(commands='learning'))
 async def start_learning(message: Message):
     '''начать учить неизученные слова'''
@@ -75,6 +67,3 @@ async def start_repeating(message: Message):
     hashed_id = hashlib.sha256(data).hexdigest()
     explored_words = import_words(hashed_id, 'explored_words')
     await send_explored_word(chat_id, explored_words)
-
-
-
