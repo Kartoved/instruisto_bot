@@ -4,7 +4,7 @@ from aiogram.types import CallbackQuery
 from aiogram.filters import Text
 from keyboards.keyboards import *
 from services.services import *
-
+from lexicon.lexicon import ABOUT_REPEATING
 
 
 router = Router()
@@ -70,3 +70,11 @@ async def stop_learning(callback: CallbackQuery):
     chat_id = callback.from_user.id
     await callback.answer('trejnado ĉesis')
     await bot.send_message(text='Изучение новых слов остановлено.', chat_id=chat_id)
+
+
+@router.callback_query(Text(text='tell me'))
+async def tell_about_repeating(callback: CallbackQuery):
+    await callback.answer('')
+    await bot.send_message(text=ABOUT_REPEATING,
+                           chat_id=callback.from_user.id,
+                           reply_markup=)

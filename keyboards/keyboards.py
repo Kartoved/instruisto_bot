@@ -33,6 +33,8 @@ keyboard_check_word = InlineKeyboardMarkup(
 btn_curve = InlineKeyboardButton(
     text='Кривая Эббингауза. Википедии',
     url='https://ru.wikipedia.org/wiki/Кривая_забывания')
+btn_about_repeating = InlineKeyboardButton(text='Расскажи подробнее, как ты работаешь!',
+                                           callback_data='tell me')
 
 keybord_start = InlineKeyboardMarkup(
-    inline_keyboard=[[btn_curve]])
+    inline_keyboard=[[btn_curve, btn_about_repeating]])
