@@ -19,7 +19,6 @@ async def process_start_command(message: Message):
     '''запуск бота, создание необходимых файлов'''
     data = str(message.chat.id).encode() + SALT.encode()
     hashed_id = hashlib.sha256(data).hexdigest()
-    print(hashed_id)
     if not path.exists(f'users_data/{hashed_id}'):
         makedirs(f'users_data/{hashed_id}', exist_ok=True)
         copy('dictionary.json', f'users_data/{hashed_id}')
@@ -46,7 +45,6 @@ async def start_learning(message: Message):
     chat_id = message.chat.id
     data = str(message.chat.id).encode() + SALT.encode()
     hashed_id = hashlib.sha256(data).hexdigest()
-    print(type(hashed_id))
     explored_words = import_words(hashed_id, 'explored_words')
     unexplored_words = import_words(hashed_id, 'unexplored_words')
     new_word = await get_unexplored_word(chat_id, unexplored_words)

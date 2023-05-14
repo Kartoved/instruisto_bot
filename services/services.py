@@ -14,11 +14,11 @@ async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
         await bot.send_message(text=format_learning_message(new_word),
                                chat_id=chat_id,
                                reply_markup=keyboard_add_word)
-        
-        return new_word
     else:
+        new_word = {}
         await bot.send_message(text='Все слова изучены. Новых слов нет.',
                                chat_id=chat_id)
+    return new_word
 
 
 def change_date(value: int) -> str:
@@ -48,8 +48,6 @@ def check_and_change_coefficient(word: dict, value: int, remember: bool = True) 
     elif value == 5:
         word['дата повторения'] = str(change_date(84))
     elif value == 6:
-        word['дата повторения'] = str(change_date(168))
-    else:
         word['дата повторения'] = str(change_date(168))
     return word
 
