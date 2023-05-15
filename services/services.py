@@ -1,10 +1,10 @@
 import json
+import hashlib
 from config_data.config import *
 from datetime import datetime, timedelta
 from keyboards.keyboards import *
-from config_data.config import SALT
 from lexicon.lexicon import format_learning_message, format_repeating_message
-
+from salt import get_salt
 
 
 async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
@@ -19,6 +19,14 @@ async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
         await bot.send_message(text='Все слова изучены. Новых слов нет.',
                                chat_id=chat_id)
     return new_word
+
+
+def get_hashed_id(chat_id: int) -> str:
+    '''получаем хешированный id пользователя для дальнейшей работы'''
+    salt = get_salt(chat_id)
+    data = str(chat_id).encode() + salt.encode()
+    hashed_id = hashlib.sha256(data).hexdigest()
+    return hashed_id
 
 
 def change_date(value: int) -> str:
@@ -72,7 +80,6 @@ def get_explored_word(explored_words: list) -> dict:
 
 def import_words(chat_id: str, list_name: str) -> list:
     '''импортирует список слов в программу'''
-    
     with open(f'users_data/{chat_id}/{list_name}.json',
               encoding='utf-8') as f:
         list_of_words = json.load(f)

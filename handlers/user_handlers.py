@@ -1,11 +1,10 @@
-import hashlib
 import json
 from os import makedirs, rename, path
 from shutil import copy
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
-from lexicon.lexicon import HELP_COMMAND, CONTACT
+from lexicon.lexicon import HELP_COMMAND
 from keyboards.keyboards import keybord_start
 from lexicon.callbacks import *
 from services.services import *
@@ -17,8 +16,7 @@ router: Router = Router()
 @router.message(Command(commands=['start']))
 async def process_start_command(message: Message):
     '''запуск бота, создание необходимых файлов'''
-    data = str(message.chat.id).encode() + SALT.encode()
-    hashed_id = hashlib.sha256(data).hexdigest()
+    hashed_id = get_hashed_id(message.chat.id)
     if not path.exists(f'users_data/{hashed_id}'):
         makedirs(f'users_data/{hashed_id}', exist_ok=True)
         copy('dictionary.json', f'users_data/{hashed_id}')
@@ -43,8 +41,7 @@ async def process_help_command(message: Message):
 async def start_learning(message: Message):
     '''начать учить неизученные слова'''
     chat_id = message.chat.id
-    data = str(message.chat.id).encode() + SALT.encode()
-    hashed_id = hashlib.sha256(data).hexdigest()
+    hashed_id = get_hashed_id(message.chat.id)
     explored_words = import_words(hashed_id, 'explored_words')
     unexplored_words = import_words(hashed_id, 'unexplored_words')
     new_word = await get_unexplored_word(chat_id, unexplored_words)
@@ -61,7 +58,6 @@ async def start_learning(message: Message):
 async def start_repeating(message: Message):
     '''повторение изученных слов'''
     chat_id = message.chat.id
-    data = str(message.chat.id).encode() + SALT.encode()
-    hashed_id = hashlib.sha256(data).hexdigest()
+    hashed_id = get_hashed_id(message.chat.id)
     explored_words = import_words(hashed_id, 'explored_words')
     await send_explored_word(chat_id, explored_words)

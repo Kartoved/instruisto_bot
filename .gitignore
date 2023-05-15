@@ -1,6 +1,7 @@
 .env
 TODO
 test.py
+salt.py
 .mypy_cache/
 .vscode/
 venv/
@@ -9,4 +10,3 @@ users_data/
 test.drawio
 /support/
 /reports/
-salt.py

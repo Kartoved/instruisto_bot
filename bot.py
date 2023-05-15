@@ -9,7 +9,6 @@ from datetime import datetime
 
 async def main():
     dp: Dispatcher = Dispatcher()
-    # await bot.delete_my_commands()
     dp.startup.register(set_main_menu)
     dp.include_router(user_handlers.router)
     dp.include_router(callbacks.router)

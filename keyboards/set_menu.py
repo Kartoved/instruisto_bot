@@ -5,6 +5,7 @@ from lexicon.lexicon import LEXICON_COMMANDS_RU
 
 
 async def set_main_menu(bot: Bot):
+    '''создание кнопки меню'''
     main_menu_commands = [BotCommand(
         command=command,
         description=description
