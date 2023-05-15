@@ -76,5 +76,4 @@ async def stop_learning(callback: CallbackQuery):
 async def tell_about_repeating(callback: CallbackQuery):
     await callback.answer('')
     await bot.send_message(text=ABOUT_REPEATING,
-                           chat_id=callback.from_user.id,
-                           reply_markup=)
+                           chat_id=callback.from_user.id)
