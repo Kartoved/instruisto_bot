@@ -36,7 +36,7 @@ def change_date(value: int) -> str:
     return date.strftime('%d-%m-%Y')
 
 
-def check_and_change_coefficient(word: dict, value: int, remember: bool = True) -> dict:
+def check_and_change_coefficient(word: dict, value: int, remember: bool = False) -> dict:
     '''проверяет текущий коэффициент и изменяет его'''
     if remember and value < 6:
         value += 1

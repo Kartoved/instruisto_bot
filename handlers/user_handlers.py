@@ -26,8 +26,7 @@ async def process_start_command(message: Message):
                   mode='w',
                   encoding='utf-8') as f:
             json.dump([], f)
-    else:
-        await process_help_command(message)
+    await process_help_command(message)
 
 
 @router.message(Command(commands=['help']))

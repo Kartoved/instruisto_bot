@@ -1,10 +1,9 @@
 import asyncio
-from aiogram import Bot, Dispatcher
-from config_data.config import bot, config
+from aiogram import Dispatcher
+from config_data.config import bot
 from handlers import user_handlers
 from lexicon import callbacks
 from keyboards.set_menu import set_main_menu
-from datetime import datetime
 
 
 async def main():

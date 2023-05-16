@@ -2,15 +2,12 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
 # инлайн-клавиатура добавить слово в список знакомых слов
-btn_stop_learning = InlineKeyboardButton(
-    text='⏹ стоп',
-    callback_data='stop learning')
 btn_add_word = InlineKeyboardButton(
     text='➡️ следующее слово',
     callback_data='get next unexplored word')
 
 keyboard_add_word = InlineKeyboardMarkup(
-    inline_keyboard=[[btn_stop_learning, btn_add_word]])
+    inline_keyboard=[[btn_add_word]])
 
 # инлайн-клавиатура для помню/не помню
 btn_forgot = InlineKeyboardButton(
@@ -19,11 +16,8 @@ btn_forgot = InlineKeyboardButton(
 btn_remember = InlineKeyboardButton(
     text='✅ помню',
     callback_data='remember')
-btn_stop_repeating = InlineKeyboardButton(
-    text='⏹ стоп',
-    callback_data='stop repeating')
 keyboard_check_word = InlineKeyboardMarkup(
-    inline_keyboard=[[btn_forgot, btn_stop_repeating, btn_remember]])
+    inline_keyboard=[[btn_forgot, btn_remember]])
 
 
 # инлайн-клавиатура для старта
