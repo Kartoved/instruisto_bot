@@ -3,7 +3,7 @@ from aiogram.types import CallbackQuery
 from aiogram.filters import Text
 from keyboards.keyboards import *
 from services.services import *
-from lexicon.lexicon import ABOUT_REPEATING, ABOUT_MNEMO
+from lexicon.lexicon import ABOUT_REPEATING, ABOUT_MNEMO, get_profile_message
 
 
 router = Router()
@@ -76,7 +76,8 @@ async def start_repeating(callback: CallbackQuery):
     await callback.answer('')
     explored_words = import_words(chat_id, 'explored_words')
     await send_explored_word(chat_id, explored_words)
-    
+
+
 @router.callback_query(Text(text='start learning'))
 async def start_repeating(callback: CallbackQuery):
     chat_id = callback.from_user.id
@@ -91,3 +92,12 @@ async def start_repeating(callback: CallbackQuery):
         if new_word not in explored_words:
             explored_words.append(new_word)
             export_words(chat_id, explored_words, 'explored_words')
+
+
+@router.callback_query(Text(text='stop'))
+async def start_repeating(callback: CallbackQuery):
+    chat_id = callback.from_user.id
+    await callback.answer('')
+    explored_words = import_words(chat_id, 'explored_words')
+    text = get_profile_message(callback.from_user.username, explored_words)
+    await bot.send_message(chat_id=chat_id, text=text, reply_markup=keyboard_profile)

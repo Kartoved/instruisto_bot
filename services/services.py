@@ -93,3 +93,8 @@ def export_words(chat_id: str, list_of_words: list, list_name: str):
               encoding='utf-8',
               mode='w') as f:
         json.dump(list_of_words, f, ensure_ascii=False)
+
+
+def delete_progress(chat_id: int):
+    '''удаляет весь прогресс пользователя'''
+    pass
