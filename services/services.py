@@ -1,10 +1,8 @@
 import json
-import hashlib
 from config_data.config import *
 from datetime import datetime, timedelta
 from keyboards.keyboards import *
 from lexicon.lexicon import format_learning_message, format_repeating_message
-from salt import get_salt
 
 
 async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
@@ -21,12 +19,14 @@ async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
     return new_word
 
 
-def get_hashed_id(chat_id: int) -> str:
-    '''получаем хешированный id пользователя для дальнейшей работы'''
-    salt = get_salt(chat_id)
-    data = str(chat_id).encode() + salt.encode()
-    hashed_id = hashlib.sha256(data).hexdigest()
-    return hashed_id
+# def highlight_word(word: dict):
+#     new_sentence = word['пример предложения'].split(' ')
+#     print(word['на эсперанто'][-1])
+#     for x in new_sentence:
+#         if x == word['на эсперанто']:
+#             new_sentence[x] = f'<strong>{x}</strong>'
+#     print(new_sentence)
+
 
 
 def change_date(value: int) -> str:
@@ -64,6 +64,7 @@ async def send_explored_word(chat_id: int, explored_words: list) -> dict:
     '''отправить пользователю изученное слово'''
     for word in explored_words:
         if datetime.strptime(word['дата повторения'], "%d-%m-%Y") <= datetime.now():
+            # highlight_word(word)
             return await bot.send_message(text=format_repeating_message(word),
                                           chat_id=chat_id,
                                           reply_markup=keyboard_check_word)

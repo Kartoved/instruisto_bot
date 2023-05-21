@@ -4,8 +4,8 @@ from shutil import copy
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
-from lexicon.lexicon import HELP_COMMAND
-from keyboards.keyboards import keybord_start
+from lexicon.lexicon import HELP_COMMAND, get_profile_message
+from keyboards.keyboards import keybord_start, keyboard_profile
 from lexicon.callbacks import *
 from services.services import *
 
@@ -16,13 +16,13 @@ router: Router = Router()
 @router.message(Command(commands=['start']))
 async def process_start_command(message: Message):
     '''запуск бота, создание необходимых файлов'''
-    hashed_id = get_hashed_id(message.chat.id)
-    if not path.exists(f'users_data/{hashed_id}'):
-        makedirs(f'users_data/{hashed_id}', exist_ok=True)
-        copy('dictionary.json', f'users_data/{hashed_id}')
-        rename(f'users_data/{hashed_id}/dictionary.json',
-               f'users_data/{hashed_id}/unexplored_words.json')
-        with open(f'users_data/{hashed_id}/explored_words.json',
+    chat_id = message.chat.id
+    if not path.exists(f'users_data/{chat_id}'):
+        makedirs(f'users_data/{chat_id}', exist_ok=True)
+        copy('dictionary.json', f'users_data/{chat_id}')
+        rename(f'users_data/{chat_id}/dictionary.json',
+               f'users_data/{chat_id}/unexplored_words.json')
+        with open(f'users_data/{chat_id}/explored_words.json',
                   mode='w',
                   encoding='utf-8') as f:
             json.dump([], f)
@@ -36,27 +36,33 @@ async def process_help_command(message: Message):
                          reply_markup=keybord_start)
 
 
+@router.message(Command(commands=['stop', 'profile']))
+async def show_profile(message: Message):
+    chat_id = message.chat.id
+    explored_words = import_words(chat_id, 'explored_words')
+    text = get_profile_message(message.from_user.username, explored_words)
+    await bot.send_message(chat_id=chat_id, text=text, reply_markup=keyboard_profile)
+
+
 @router.message(Command(commands='learning'))
 async def start_learning(message: Message):
     '''начать учить неизученные слова'''
     chat_id = message.chat.id
-    hashed_id = get_hashed_id(message.chat.id)
-    explored_words = import_words(hashed_id, 'explored_words')
-    unexplored_words = import_words(hashed_id, 'unexplored_words')
+    explored_words = import_words(chat_id, 'explored_words')
+    unexplored_words = import_words(chat_id, 'unexplored_words')
     new_word = await get_unexplored_word(chat_id, unexplored_words)
     if new_word:
         new_word = check_and_change_coefficient(
             new_word, new_word['коэффициент'])
-        export_words(hashed_id, unexplored_words, 'unexplored_words')
+        export_words(chat_id, unexplored_words, 'unexplored_words')
         if new_word not in explored_words:
             explored_words.append(new_word)
-            export_words(hashed_id, explored_words, 'explored_words')
+            export_words(chat_id, explored_words, 'explored_words')
 
 
 @router.message(Command(commands='repeating'))
 async def start_repeating(message: Message):
     '''повторение изученных слов'''
     chat_id = message.chat.id
-    hashed_id = get_hashed_id(message.chat.id)
-    explored_words = import_words(hashed_id, 'explored_words')
+    explored_words = import_words(chat_id, 'explored_words')
     await send_explored_word(chat_id, explored_words)
