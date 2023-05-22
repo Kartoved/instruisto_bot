@@ -5,7 +5,7 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 from lexicon.lexicon import HELP_COMMAND, get_profile_message
-from keyboards.keyboards import keybord_start, keyboard_profile
+from keyboards.keyboards import keybord_start, keyboard_profile, keyboard_reset
 from lexicon.callbacks import *
 from services.services import *
 

@@ -1,9 +1,10 @@
+from shutil import rmtree
 from aiogram import Router
 from aiogram.types import CallbackQuery
 from aiogram.filters import Text
 from keyboards.keyboards import *
 from services.services import *
-from lexicon.lexicon import ABOUT_REPEATING, ABOUT_MNEMO, get_profile_message
+from lexicon.lexicon import ABOUT_REPEATING, ABOUT_MNEMO, get_profile_message, RESET_MESSAGE
 
 
 router = Router()
@@ -101,3 +102,18 @@ async def start_repeating(callback: CallbackQuery):
     explored_words = import_words(chat_id, 'explored_words')
     text = get_profile_message(callback.from_user.username, explored_words)
     await bot.send_message(chat_id=chat_id, text=text, reply_markup=keyboard_profile)
+
+
+@router.callback_query(Text(text='reset progress'))
+async def process_reset_progress(callback: CallbackQuery):
+    chat_id = callback.from_user.id
+    await callback.answer('')
+    await bot.send_message(chat_id=chat_id, text=RESET_MESSAGE, reply_markup=keyboard_reset)
+
+
+@router.callback_query(Text(text='accepting reset'))
+async def process_reset_progress(callback: CallbackQuery):
+    chat_id = callback.from_user.id
+    await callback.answer('')
+    rmtree(f'users_data/{chat_id}')
+    await bot.send_message(chat_id=chat_id, text=f'Ваш прогресс сброшен!')

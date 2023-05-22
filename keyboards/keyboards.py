@@ -36,18 +36,33 @@ btn_mnemo = InlineKeyboardButton(text='Что ещё за мнемотехник
                                  callback_data='about mnemo')
 keyboard_mnemo = InlineKeyboardMarkup(inline_keyboard=[[btn_mnemo]])
 
-
+# клавиатура профиля
 btn_learning = InlineKeyboardButton(
     text='📖 учить новые слова', callback_data='start learning')
 btn_repeating = InlineKeyboardButton(
     text='🔁 повторять слова', callback_data='start repeating')
 btn_contact_with_dev = InlineKeyboardButton(
-    text='📨 связь с разработчиком', callback_data='/afddf')
+    text='📨 связь с разработчиком', callback_data='contact')
 btn_reset_progress = InlineKeyboardButton(
-    text='❌ сбросить прогресс', callback_data='/adff')
+    text='❌ сбросить прогресс', callback_data='reset progress')
 btn_help = InlineKeyboardButton(
-    text='❓ как это работает?', callback_data='/sfsaf')
+    text='❓ как это работает?', callback_data='help')
 keyboard_profile = InlineKeyboardMarkup(
     inline_keyboard=[[btn_learning, btn_repeating],
                      [btn_reset_progress, btn_contact_with_dev],
                      [btn_help]])
+
+# клавиатура для удаления прогресса профиля
+btn_accepting_reset = InlineKeyboardButton(
+    text='✅ Да, я уверен. Удали весь мой прогресс',
+    callback_data='accepting reset'
+)
+
+btn_cancel = InlineKeyboardButton(
+    text='⏹ отмена',
+    callback_data='stop'
+)
+
+keyboard_reset = InlineKeyboardMarkup(
+    inline_keyboard=[[btn_cancel, btn_accepting_reset]]
+)

@@ -27,6 +27,8 @@ LEXICON_COMMANDS_RU: dict[str, str] = {
 ABOUT_UPDATE: str = f''
 
 
+RESET_MESSAGE: str = f'🚫🚫🚫 Вы уверены, что хотите сбросить весь прогресс?\nЭто действие сбросит статистику и удалит все изученные слова и придётся их учить заново!'
+
 def get_profile_message(username: str, list_name: str) -> str:
     return f'''📋 Ваш профиль: <strong>{username}</strong>\n\n📊 Изучено слов {round(len(list_name)/(1202/100), 1)}% ({len(list_name)} из 1202)'''
 
