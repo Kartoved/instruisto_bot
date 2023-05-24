@@ -4,8 +4,7 @@ from aiogram.types import CallbackQuery
 from aiogram.filters import Text
 from keyboards.keyboards import *
 from services.services import *
-from lexicon.lexicon import ABOUT_REPEATING, ABOUT_MNEMO, get_profile_message, RESET_MESSAGE
-
+from lexicon.lexicon import *
 
 router = Router()
 
@@ -71,6 +70,14 @@ async def tell_about_repeating(callback: CallbackQuery):
                            disable_web_page_preview=True)
 
 
+@router.callback_query(Text(text='help'))
+async def tell_about_repeating(callback: CallbackQuery):
+    await callback.answer('')
+    await bot.send_message(text=HELP_COMMAND,
+                           chat_id=callback.from_user.id,
+                           reply_markup=keybord_start)
+
+
 @router.callback_query(Text(text='start repeating'))
 async def start_repeating(callback: CallbackQuery):
     chat_id = callback.from_user.id
@@ -107,10 +114,11 @@ async def start_repeating(callback: CallbackQuery):
 @router.callback_query(Text(text='cancel'))
 async def start_repeating(callback: CallbackQuery):
     chat_id = callback.from_user.id
-    await callback.answer('')
+    await callback.answer('Сброс прогресса отменён')
     explored_words = import_words(chat_id, 'explored_words')
     text = get_profile_message(callback.from_user.username, explored_words)
     await callback.message.edit_text(text=text, reply_markup=keyboard_profile)
+
 
 @router.callback_query(Text(text='reset progress'))
 async def process_reset_progress(callback: CallbackQuery):
@@ -123,7 +131,7 @@ async def process_reset_progress(callback: CallbackQuery):
 @router.callback_query(Text(text='accepting reset'))
 async def process_reset_progress(callback: CallbackQuery):
     chat_id = callback.from_user.id
-    await callback.answer('')
+    await callback.answer('Принято')
     rmtree(f'users_data/{chat_id}')
     create_user_folders(chat_id)
     await callback.message.edit_text(text=f'Ваш прогресс сброшен!')

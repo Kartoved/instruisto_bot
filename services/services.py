@@ -96,7 +96,6 @@ def export_words(chat_id: str, list_of_words: list, list_name: str):
               mode='w') as f:
         json.dump(list_of_words, f, ensure_ascii=False)
 
-
 def create_user_folders(chat_id: int):
     if not path.exists(f'users_data/{chat_id}'):
         makedirs(f'users_data/{chat_id}', exist_ok=True)
@@ -106,3 +105,4 @@ def create_user_folders(chat_id: int):
         with open(f'users_data/{chat_id}/explored_words.json',
                   mode='w', encoding='utf-8') as f:
             json.dump([], f)
+    
