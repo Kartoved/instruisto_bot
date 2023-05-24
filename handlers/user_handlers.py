@@ -5,7 +5,7 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 from lexicon.lexicon import HELP_COMMAND, get_profile_message
-from keyboards.keyboards import keybord_start, keyboard_profile, keyboard_reset
+from keyboards.keyboards import keybord_start, keyboard_profile
 from lexicon.callbacks import *
 from services.services import *
 
@@ -17,15 +17,7 @@ router: Router = Router()
 async def process_start_command(message: Message):
     '''запуск бота, создание необходимых файлов'''
     chat_id = message.chat.id
-    if not path.exists(f'users_data/{chat_id}'):
-        makedirs(f'users_data/{chat_id}', exist_ok=True)
-        copy('dictionary.json', f'users_data/{chat_id}')
-        rename(f'users_data/{chat_id}/dictionary.json',
-               f'users_data/{chat_id}/unexplored_words.json')
-        with open(f'users_data/{chat_id}/explored_words.json',
-                  mode='w',
-                  encoding='utf-8') as f:
-            json.dump([], f)
+    create_user_folders(chat_id)
     await process_help_command(message)
 
 

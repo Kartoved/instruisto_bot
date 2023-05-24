@@ -60,7 +60,7 @@ btn_accepting_reset = InlineKeyboardButton(
 
 btn_cancel = InlineKeyboardButton(
     text='⏹ отмена',
-    callback_data='stop'
+    callback_data='cancel'
 )
 
 keyboard_reset = InlineKeyboardMarkup(

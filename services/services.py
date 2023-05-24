@@ -1,4 +1,7 @@
 import json
+from os import makedirs, rename, path
+from shutil import copy
+from aiogram.types import Message
 from config_data.config import *
 from datetime import datetime, timedelta
 from keyboards.keyboards import *
@@ -26,7 +29,6 @@ async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
 #         if x == word['на эсперанто']:
 #             new_sentence[x] = f'<strong>{x}</strong>'
 #     print(new_sentence)
-
 
 
 def change_date(value: int) -> str:
@@ -95,6 +97,12 @@ def export_words(chat_id: str, list_of_words: list, list_name: str):
         json.dump(list_of_words, f, ensure_ascii=False)
 
 
-def delete_progress(chat_id: int):
-    '''удаляет весь прогресс пользователя'''
-    pass
+def create_user_folders(chat_id: int):
+    if not path.exists(f'users_data/{chat_id}'):
+        makedirs(f'users_data/{chat_id}', exist_ok=True)
+        copy('dictionary.json', f'users_data/{chat_id}')
+        rename(f'users_data/{chat_id}/dictionary.json',
+               f'users_data/{chat_id}/unexplored_words.json')
+        with open(f'users_data/{chat_id}/explored_words.json',
+                  mode='w', encoding='utf-8') as f:
+            json.dump([], f)
