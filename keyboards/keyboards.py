@@ -54,7 +54,7 @@ keyboard_profile = InlineKeyboardMarkup(
 
 # клавиатура для удаления прогресса профиля
 btn_accepting_reset = InlineKeyboardButton(
-    text='✅ Да, я уверен. Удали весь мой прогресс',
+    text='✅ да, я уверен',
     callback_data='accepting reset'
 )
 

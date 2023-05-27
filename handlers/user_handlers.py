@@ -1,6 +1,3 @@
-import json
-from os import makedirs, rename, path
-from shutil import copy
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
@@ -18,6 +15,7 @@ async def process_start_command(message: Message):
     '''запуск бота, создание необходимых файлов'''
     chat_id = message.chat.id
     create_user_folders(chat_id)
+    add_user_to_list(chat_id)
     await process_help_command(message)
 
 

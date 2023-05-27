@@ -1,7 +1,6 @@
 import json
 from os import makedirs, rename, path
 from shutil import copy
-from aiogram.types import Message
 from config_data.config import *
 from datetime import datetime, timedelta
 from keyboards.keyboards import *
@@ -96,6 +95,7 @@ def export_words(chat_id: str, list_of_words: list, list_name: str):
               mode='w') as f:
         json.dump(list_of_words, f, ensure_ascii=False)
 
+
 def create_user_folders(chat_id: int):
     if not path.exists(f'users_data/{chat_id}'):
         makedirs(f'users_data/{chat_id}', exist_ok=True)
@@ -105,4 +105,12 @@ def create_user_folders(chat_id: int):
         with open(f'users_data/{chat_id}/explored_words.json',
                   mode='w', encoding='utf-8') as f:
             json.dump([], f)
-    
+
+
+def add_user_to_list(chat_id):
+    with open('users_data/user_list.json') as f:
+        user_list = json.load(f)
+        if chat_id not in user_list:
+            user_list.append(chat_id)
+            with open('users_data/user_list.json', 'w') as f:
+                json.dump(user_list, f)
