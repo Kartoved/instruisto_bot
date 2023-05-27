@@ -4,6 +4,7 @@ from shutil import rmtree
 from aiogram import Router
 from aiogram.types import CallbackQuery
 from aiogram.filters import Text
+from config_data.config import bot
 import keyboards.keyboards as k
 import services.services as s
 import lexicon.lexicon as l

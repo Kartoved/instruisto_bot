@@ -5,8 +5,8 @@ from aiogram.types import Message
 from aiogram.filters import Command
 from lexicon.lexicon import HELP_COMMAND, get_profile_message
 from keyboards.keyboards import keybord_start, keyboard_profile
+from config_data.config import bot
 import services.services as s
-from config_data.config import *
 
 router: Router = Router()
 
