@@ -1,21 +1,23 @@
+'''необходимые функции'''
+
 import json
 from os import makedirs, rename, path
 from shutil import copy
-from config_data.config import *
 from datetime import datetime, timedelta
-from keyboards.keyboards import *
+from config_data.config import bot
+from keyboards.keyboards import keyboard_add_word, keyboard_check_word
 from lexicon.lexicon import format_learning_message, format_repeating_message
 
 
 async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
     '''выдаёт одно слово из списка неизученных'''
     if unexplored_words:
-        new_word = unexplored_words.pop(0)
+        new_word: dict = unexplored_words.pop(0)
         await bot.send_message(text=format_learning_message(new_word),
                                chat_id=chat_id,
                                reply_markup=keyboard_add_word)
     else:
-        new_word = {}
+        new_word: dict = {}
         await bot.send_message(text='Все слова изучены. Новых слов нет.',
                                chat_id=chat_id)
     return new_word
@@ -32,7 +34,7 @@ async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
 
 def change_date(value: int) -> str:
     '''меняет дату повторения слова'''
-    date = datetime.now()
+    date: datetime = datetime.now()
     date = date + timedelta(days=value)
     return date.strftime('%d-%m-%Y')
 
@@ -43,7 +45,7 @@ def check_and_change_coefficient(word: dict, value: int, remember: bool = False)
         value += 1
     elif not remember and value > 0:
         value -= 1
-    word['коэффициент'] = value
+    word['коэффициент']: int = value
     if value <= 0:
         word['дата повторения'] = str(change_date(1))
     elif value == 1:
@@ -84,7 +86,7 @@ def import_words(chat_id: str, list_name: str) -> list:
     '''импортирует список слов в программу'''
     with open(f'users_data/{chat_id}/{list_name}.json',
               encoding='utf-8') as f:
-        list_of_words = json.load(f)
+        list_of_words: list = json.load(f)
     return list_of_words
 
 
@@ -97,6 +99,7 @@ def export_words(chat_id: str, list_of_words: list, list_name: str):
 
 
 def create_user_folders(chat_id: int):
+    '''создаёт папку пользователя'''
     if not path.exists(f'users_data/{chat_id}'):
         makedirs(f'users_data/{chat_id}', exist_ok=True)
         copy('dictionary.json', f'users_data/{chat_id}')
@@ -108,8 +111,9 @@ def create_user_folders(chat_id: int):
 
 
 def add_user_to_list(chat_id):
+    '''добавляет юзера в список юзеров'''
     with open('users_data/user_list.json') as f:
-        user_list = json.load(f)
+        user_list: list = json.load(f)
         if chat_id not in user_list:
             user_list.append(chat_id)
             with open('users_data/user_list.json', 'w') as f:

@@ -1,3 +1,5 @@
+'''клавиатуры для бота'''
+
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # инлайн-клавиатура добавить слово в список знакомых слов

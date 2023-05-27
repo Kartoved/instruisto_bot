@@ -1,3 +1,5 @@
+'''исполняемый файл'''
+
 import asyncio
 from aiogram import Dispatcher
 from config_data.config import bot
