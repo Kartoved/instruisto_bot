@@ -1,10 +1,10 @@
 '''хендлеры'''
-
+import json
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
-from lexicon.lexicon import HELP_COMMAND, get_profile_message
-from keyboards.keyboards import keybord_start, keyboard_profile
+from lexicon.lexicon import HELP_COMMAND, get_profile_message, CONTACT
+from keyboards.keyboards import keybord_start, keyboard_profile, keyboard_cancel
 from config_data.config import bot
 import services.services as s
 

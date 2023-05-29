@@ -120,7 +120,7 @@ def add_user_to_list(chat_id):
                 json.dump(user_list, f)
 
 
- def catch_report(chat_id):
+def catch_report(chat_id):
     with open('reports/reports.json') as f:
         reports = json.load(f)
     if str(chat_id) in reports:

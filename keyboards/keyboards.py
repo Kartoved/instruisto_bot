@@ -68,3 +68,7 @@ btn_cancel = InlineKeyboardButton(
 keyboard_reset = InlineKeyboardMarkup(
     inline_keyboard=[[btn_cancel, btn_accepting_reset]]
 )
+
+keyboard_cancel = InlineKeyboardMarkup(
+    inline_keyboard=[[btn_cancel]]
+)
