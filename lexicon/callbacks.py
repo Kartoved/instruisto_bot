@@ -155,3 +155,12 @@ async def accept_reset(callback: CallbackQuery):
     s.create_user_folders(chat_id)
     await callback.message.edit_text(
         text=f'{callback.from_user.username}, твой прогресс сброшен!')
+
+
+@router.callback_query(Text(text='contact'))
+async def write_message_to_dev(callback: CallbackQuery):
+    chat_id: int = callback.from_user.id
+    s.catch_report(chat_id=chat_id)
+    await bot.send_message(text=l.CONTACT,
+                           chat_id=chat_id,
+                           reply_markup=k.keyboard_cancel)

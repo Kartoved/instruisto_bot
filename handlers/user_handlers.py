@@ -58,3 +58,29 @@ async def start_repeating(message: Message):
     chat_id: int = message.chat.id
     explored_words: list = s.import_words(chat_id, 'explored_words')
     await s.send_explored_word(chat_id, explored_words)
+
+
+@router.message(Command(commands=['contact']))
+async def write_message_to_dev(message: Message):
+    '''написать сообщение разработчику'''
+    chat_id: int = message.chat.id
+    s.catch_report(chat_id=chat_id)
+    await bot.send_message(text=CONTACT,
+                           chat_id=chat_id,
+                           reply_markup=keyboard_cancel)
+
+
+@router.message()
+async def send_report(message: Message):
+    chat_id: int = message.chat.id
+    mes = message.text
+    with open('reports/reports.json') as f:
+        reports = json.load(f)
+    if reports[str(chat_id)]:
+        s.export_report(chat_id, mes, message.from_user.username)
+        reports[str(chat_id)] = False
+        with open('reports/reports.json', 'w') as f:
+            json.dump(reports, f)
+        await bot.send_message(
+            chat_id=chat_id,
+            text='😊 Спасибо! Твоё сообщение направлено моему разработчику')
