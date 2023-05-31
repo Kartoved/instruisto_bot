@@ -130,7 +130,7 @@ async def stop_repeating(callback: CallbackQuery):
 async def cancel_reset(callback: CallbackQuery):
     '''отменяет процесс сброса прогресса'''
     chat_id: int = callback.from_user.id
-    await callback.answer('Сброс прогресса отменён')
+    await callback.answer('отмена')
     explored_words: list = s.import_words(chat_id, 'explored_words')
     text: str = l.get_profile_message(
         callback.from_user.username, explored_words)
@@ -161,6 +161,7 @@ async def accept_reset(callback: CallbackQuery):
 async def write_message_to_dev(callback: CallbackQuery):
     chat_id: int = callback.from_user.id
     s.catch_report(chat_id=chat_id)
+    await callback.answer('')
     await bot.send_message(text=l.CONTACT,
                            chat_id=chat_id,
                            reply_markup=k.keyboard_cancel)
