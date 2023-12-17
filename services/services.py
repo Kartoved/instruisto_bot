@@ -23,13 +23,6 @@ async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
     return new_word
 
 
-# def highlight_word(word: dict):
-#     new_sentence = word['пример предложения'].split(' ')
-#     print(word['на эсперанто'][-1])
-#     for x in new_sentence:
-#         if x == word['на эсперанто']:
-#             new_sentence[x] = f'<strong>{x}</strong>'
-#     print(new_sentence)
 
 
 def change_date(value: int) -> str:
@@ -67,7 +60,6 @@ async def send_explored_word(chat_id: int, explored_words: list) -> dict:
     '''отправить пользователю изученное слово'''
     for word in explored_words:
         if datetime.strptime(word['дата повторения'], "%d-%m-%Y") <= datetime.now():
-            # highlight_word(word)
             return await bot.send_message(text=format_repeating_message(word),
                                           chat_id=chat_id,
                                           reply_markup=keyboard_check_word)
@@ -112,12 +104,16 @@ def create_user_folders(chat_id: int):
 
 def add_user_to_list(chat_id):
     '''добавляет юзера в список юзеров'''
-    with open('users_data/user_list.json') as f:
-        user_list: list = json.load(f)
-        if chat_id not in user_list:
-            user_list.append(chat_id)
-            with open('users_data/user_list.json', 'w') as f:
-                json.dump(user_list, f)
+    try:
+        with open('users_data/user_list.json') as f:
+            user_list: list = json.load(f)
+            if chat_id not in user_list:
+                user_list.append(chat_id)
+                with open('users_data/user_list.json', 'w') as f:
+                    json.dump(user_list, f)
+    except FileNotFoundError:
+        with open('users_data/user_list.json', 'w') as f:
+            json.dump(chat_id, f)
 
 
 def catch_report(chat_id):

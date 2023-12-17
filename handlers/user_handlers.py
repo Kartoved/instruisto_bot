@@ -1,6 +1,6 @@
 '''хендлеры'''
 import json
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import Command
 from lexicon.lexicon import HELP_COMMAND, get_profile_message, CONTACT
@@ -74,8 +74,12 @@ async def write_message_to_dev(message: Message):
 async def send_report(message: Message):
     chat_id: int = message.chat.id
     mes = message.text
-    with open('reports/reports.json') as f:
-        reports = json.load(f)
+    try:
+        with open('reports/reports.json') as f:
+            reports = json.load(f)
+    except FileNotFoundError:
+        with open('reports/reports.json', 'w') as f:
+            json.dump(chat_id, f)
     if reports[str(chat_id)]:
         s.export_report(chat_id, mes, message.from_user.username)
         reports[str(chat_id)] = False
