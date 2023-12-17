@@ -123,9 +123,10 @@ def catch_report(chat_id):
         reports[str(chat_id)] = True
     with open('reports/reports.json', 'w') as f:
         json.dump(reports, f)
-
+    
 
 def export_report(chat_id: int, report: str, username: str):
-    date = datetime.now()
+    date = datetime.now().strftime('%d-%m-%Y-%H-%M-%S')
     with open(f'reports/{date}.txt', 'w') as f:
         f.write(f'{username}\n\n{report}')
+    

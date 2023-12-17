@@ -74,17 +74,10 @@ async def write_message_to_dev(message: Message):
 async def send_report(message: Message):
     chat_id: int = message.chat.id
     mes = message.text
-    try:
-        with open('reports/reports.json') as f:
-            reports = json.load(f)
-    except FileNotFoundError:
-        with open('reports/reports.json', 'w') as f:
-            json.dump(chat_id, f)
-    if reports[str(chat_id)]:
-        s.export_report(chat_id, mes, message.from_user.username)
-        reports[str(chat_id)] = False
-        with open('reports/reports.json', 'w') as f:
-            json.dump(reports, f)
-        await bot.send_message(
-            chat_id=chat_id,
-            text='😊 Спасибо! Твоё сообщение направлено моему разработчику')
+    with open('reports/reports.json') as f:
+        reports = json.load(f)
+    s.export_report(chat_id, mes, message.from_user.username)
+    with open('reports/reports.json', 'w') as f:
+        json.dump(reports, f)
+    await bot.send_message(chat_id=chat_id,
+                           text='😊 Спасибо! Твоё сообщение направлено моему разработчику')

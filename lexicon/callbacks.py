@@ -11,7 +11,7 @@ import lexicon.lexicon as l
 router = Router()
 
 
-@router.callback_query(F.text=='get next unexplored word')
+@router.callback_query(F.text == 'get next unexplored word')
 async def get_next_unexplored_word(callback: CallbackQuery):
     '''выдаёт следующее неизученное слово'''
     chat_id: int = callback.from_user.id
@@ -28,7 +28,7 @@ async def get_next_unexplored_word(callback: CallbackQuery):
             s.export_words(chat_id, explored_words, 'explored_words')
 
 
-@router.callback_query(F.text=='remember')
+@router.callback_query(F.text == 'remember')
 async def remember(callback: CallbackQuery):
     '''срабатывает, если юзер помнит слово'''
     chat_id: int = callback.from_user.id
@@ -44,7 +44,7 @@ async def remember(callback: CallbackQuery):
     await s.send_explored_word(chat_id, explored_words)
 
 
-@router.callback_query(F.text=='forgot')
+@router.callback_query(F.text == 'forgot')
 async def forgot(callback: CallbackQuery):
     '''срабатывает, если юзер не помнит слова'''
     chat_id: int = callback.from_user.id
@@ -60,7 +60,7 @@ async def forgot(callback: CallbackQuery):
     await s.send_explored_word(chat_id, explored_words)
 
 
-@router.callback_query(F.text=='about bot')
+@router.callback_query(F.text == 'about bot')
 async def tell_about_bot(callback: CallbackQuery):
     '''рассказывает о принципе работы бота'''
     await callback.answer('')
@@ -70,7 +70,7 @@ async def tell_about_bot(callback: CallbackQuery):
                            disable_web_page_preview=True)
 
 
-@router.callback_query(F.text=='about mnemo')
+@router.callback_query(F.text == 'about mnemo')
 async def tell_about_mnemo(callback: CallbackQuery):
     '''рассказывает про мнемотехники'''
     await callback.answer('')
@@ -79,7 +79,7 @@ async def tell_about_mnemo(callback: CallbackQuery):
                            disable_web_page_preview=True)
 
 
-@router.callback_query(F.text=='help')
+@router.callback_query(F.text == 'help')
 async def process_help_command(callback: CallbackQuery):
     '''справка со всеми командами'''
     await callback.answer('')
@@ -88,7 +88,7 @@ async def process_help_command(callback: CallbackQuery):
                            reply_markup=k.keybord_start)
 
 
-@router.callback_query(F.text=='start repeating')
+@router.callback_query(F.text == 'start repeating')
 async def start_repeating(callback: CallbackQuery):
     '''инициирует процесс повторения изученных слов'''
     chat_id: int = callback.from_user.id
@@ -97,7 +97,7 @@ async def start_repeating(callback: CallbackQuery):
     await s.send_explored_word(chat_id, explored_words)
 
 
-@router.callback_query(F.text=='start learning')
+@router.callback_query(F.text == 'start learning')
 async def start_learning(callback: CallbackQuery):
     '''инициирует процесс изучения новых слов'''
     chat_id: int = callback.from_user.id
@@ -114,7 +114,7 @@ async def start_learning(callback: CallbackQuery):
             s.export_words(chat_id, explored_words, 'explored_words')
 
 
-@router.callback_query(F.text=='stop')
+@router.callback_query(F.text == 'stop')
 async def stop_repeating(callback: CallbackQuery):
     '''останавливает тренировку'''
     chat_id: int = callback.from_user.id
@@ -125,7 +125,7 @@ async def stop_repeating(callback: CallbackQuery):
     await bot.send_message(chat_id=chat_id, text=text, reply_markup=k.keyboard_profile)
 
 
-@router.callback_query(F.text=='cancel')
+@router.callback_query(F.text == 'cancel')
 async def cancel_reset(callback: CallbackQuery):
     '''отменяет процесс сброса прогресса'''
     chat_id: int = callback.from_user.id
@@ -136,7 +136,7 @@ async def cancel_reset(callback: CallbackQuery):
     await callback.message.edit_text(text=text, reply_markup=k.keyboard_profile)
 
 
-@router.callback_query(F.text=='reset progress')
+@router.callback_query(F.text == 'reset progress')
 async def process_reset_progress(callback: CallbackQuery):
     '''запрашивает подтверждение сброса прогресса'''
     await callback.answer('')
@@ -145,7 +145,7 @@ async def process_reset_progress(callback: CallbackQuery):
         reply_markup=k.keyboard_reset)
 
 
-@router.callback_query(F.text=='accepting reset')
+@router.callback_query(F.text == 'accepting reset')
 async def accept_reset(callback: CallbackQuery):
     '''подтверждаем процесс сброса прогресса'''
     chat_id: int = callback.from_user.id
@@ -156,7 +156,7 @@ async def accept_reset(callback: CallbackQuery):
         text=f'{callback.from_user.username}, твой прогресс сброшен!')
 
 
-@router.callback_query(F.text=='contact')
+@router.callback_query(F.text == 'contact')
 async def write_message_to_dev(callback: CallbackQuery):
     chat_id: int = callback.from_user.id
     s.catch_report(chat_id=chat_id)
