@@ -64,7 +64,7 @@ async def start_repeating(message: Message):
 async def write_message_to_dev(message: Message):
     '''написать сообщение разработчику'''
     chat_id: int = message.chat.id
-    s.catch_report(chat_id=chat_id)
+    # s.catch_report(chat_id=chat_id)
     await bot.send_message(text=CONTACT,
                            chat_id=chat_id,
                            reply_markup=keyboard_cancel)

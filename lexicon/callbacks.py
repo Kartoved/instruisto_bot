@@ -159,7 +159,7 @@ async def accept_reset(callback: CallbackQuery):
 @router.callback_query(F.text == 'contact')
 async def write_message_to_dev(callback: CallbackQuery):
     chat_id: int = callback.from_user.id
-    s.catch_report(chat_id=chat_id)
+    # s.catch_report(chat_id=chat_id)
     await callback.answer('')
     await bot.send_message(text=l.CONTACT,
                            chat_id=chat_id,

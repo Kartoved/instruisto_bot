@@ -116,17 +116,17 @@ def add_user_to_list(chat_id):
             json.dump(chat_id, f)
 
 
-def catch_report(chat_id):
-    with open('reports/reports.json') as f:
-        reports = json.load(f)
-    if str(chat_id) in reports:
-        reports[str(chat_id)] = True
-    with open('reports/reports.json', 'w') as f:
-        json.dump(reports, f)
+# def catch_report(chat_id):
+#     with open('reports/reports.json') as f:
+#         reports = json.load(f)
+#     if str(chat_id) in reports:
+#         reports[str(chat_id)] = True
+#     with open('reports/reports.json', 'w') as f:
+#         json.dump(reports, f)
     
 
 def export_report(chat_id: int, report: str, username: str):
     date = datetime.now().strftime('%d-%m-%Y-%H-%M-%S')
-    with open(f'reports/{date}.txt', 'w') as f:
+    with open(f'reports/{date}.txt', 'w', encoding='utf-8') as f:
         f.write(f'{username}\n\n{report}')
     
