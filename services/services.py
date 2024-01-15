@@ -33,12 +33,12 @@ def change_date(value: int) -> str:
 
 
 def check_and_change_coefficient(word: dict, value: int, remember: bool = False) -> dict:
-    '''проверяет текущий коэффициент и изменяет его'''
+    '''проверяет текущий интервал и изменяет его'''
     if remember and value < 6:
         value += 1
     elif not remember and value > 0:
         value -= 1
-    word['коэффициент']: int = value
+    word['интервал']: int = value
     if value <= 0:
         word['дата повторения'] = str(change_date(1))
     elif value == 1:
@@ -115,15 +115,6 @@ def add_user_to_list(chat_id):
         with open('users_data/user_list.json', 'w') as f:
             json.dump(chat_id, f)
 
-
-# def catch_report(chat_id):
-#     with open('reports/reports.json') as f:
-#         reports = json.load(f)
-#     if str(chat_id) in reports:
-#         reports[str(chat_id)] = True
-#     with open('reports/reports.json', 'w') as f:
-#         json.dump(reports, f)
-    
 
 def export_report(chat_id: int, report: str, username: str):
     date = datetime.now().strftime('%d-%m-%Y-%H-%M-%S')

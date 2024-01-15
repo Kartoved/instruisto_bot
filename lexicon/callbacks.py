@@ -21,7 +21,7 @@ async def get_next_unexplored_word(callback: CallbackQuery):
     new_word: dict = await s.get_unexplored_word(chat_id, unexplored_words)
     if new_word:
         new_word = s.check_and_change_coefficient(
-            new_word, new_word['коэффициент'])
+            new_word, new_word['интервал'])
         s.export_words(chat_id, unexplored_words, 'unexplored_words')
         if new_word not in explored_words:
             explored_words.append(new_word)
@@ -37,7 +37,7 @@ async def remember(callback: CallbackQuery):
     word: dict = s.get_explored_word(explored_words)
     explored_words.remove(word)
     word: dict = s.check_and_change_coefficient(
-        word, word['коэффициент'], True)
+        word, word['интервал'], True)
     if word not in explored_words:
         explored_words.append(word)
         s.export_words(chat_id, explored_words, 'explored_words')
@@ -53,7 +53,7 @@ async def forgot(callback: CallbackQuery):
     word: dict = s.get_explored_word(explored_words)
     explored_words.remove(word)
     word: dict = s.check_and_change_coefficient(
-        word, word['коэффициент'], False)
+        word, word['интервал'], False)
     if word not in explored_words:
         explored_words.append(word)
         s.export_words(chat_id, explored_words, 'explored_words')
@@ -107,7 +107,7 @@ async def start_learning(callback: CallbackQuery):
     new_word: dict = await s.get_unexplored_word(chat_id, unexplored_words)
     if new_word:
         new_word = s.check_and_change_coefficient(
-            new_word, new_word['коэффициент'])
+            new_word, new_word['интервал'])
         s.export_words(chat_id, unexplored_words, 'unexplored_words')
         if new_word not in explored_words:
             explored_words.append(new_word)

@@ -45,7 +45,7 @@ async def start_learning(message: Message):
     new_word: dict = await s.get_unexplored_word(chat_id, unexplored_words)
     if new_word:
         new_word = s.check_and_change_coefficient(
-            new_word, new_word['коэффициент'])
+            new_word, new_word['интервал'])
         s.export_words(chat_id, unexplored_words, 'unexplored_words')
         if new_word not in explored_words:
             explored_words.append(new_word)
