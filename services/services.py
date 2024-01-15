@@ -128,5 +128,5 @@ def add_user_to_list(chat_id):
 def export_report(chat_id: int, report: str, username: str):
     date = datetime.now().strftime('%d-%m-%Y-%H-%M-%S')
     with open(f'reports/{date}.txt', 'w', encoding='utf-8') as f:
-        f.write(f'{username}\n\n{report}')
+        f.write(f'from user: {username}\n\n"{report}"')
     
