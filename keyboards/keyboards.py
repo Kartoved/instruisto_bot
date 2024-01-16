@@ -47,11 +47,14 @@ btn_contact_with_dev = InlineKeyboardButton(
     text='📨 связь с разработчиком', callback_data='contact')
 btn_reset_progress = InlineKeyboardButton(
     text='❌ сбросить прогресс', callback_data='reset progress')
+btn_links = InlineKeyboardButton(
+    text='🔗 полезные ссылки', callback_data='show_links')
 btn_help = InlineKeyboardButton(
     text='❓ как это работает?', callback_data='help')
 keyboard_profile = InlineKeyboardMarkup(
     inline_keyboard=[[btn_learning, btn_repeating],
-                     [btn_reset_progress, btn_contact_with_dev],
+                     [btn_reset_progress, btn_links],
+                     [btn_contact_with_dev],
                      [btn_help]])
 
 # клавиатура для удаления прогресса профиля

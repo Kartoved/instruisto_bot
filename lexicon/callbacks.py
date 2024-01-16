@@ -159,8 +159,17 @@ async def accept_reset(callback: CallbackQuery):
 @router.callback_query(F.data == 'contact')
 async def write_message_to_dev(callback: CallbackQuery):
     chat_id: int = callback.from_user.id
-    # s.catch_report(chat_id=chat_id)
     await callback.answer('')
     await bot.send_message(text=l.CONTACT,
                            chat_id=chat_id,
                            reply_markup=k.keyboard_cancel)
+    
+
+@router.callback_query(F.data == 'show_links')
+async def send_useful_links(callback: CallbackQuery):
+    '''показать полезные ссылки'''
+    await callback.answer('')
+    await bot.send_message(text=l.LINKS,
+                           chat_id=callback.from_user.id,
+                           disable_web_page_preview=True)
+

@@ -3,7 +3,7 @@ import json
 from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import Command
-from lexicon.lexicon import HELP_COMMAND, get_profile_message, CONTACT
+from lexicon.lexicon import HELP_COMMAND, get_profile_message, CONTACT, LINKS
 from keyboards.keyboards import keybord_start, keyboard_profile, keyboard_cancel
 from config_data.config import bot
 import services.services as s
@@ -65,12 +65,17 @@ async def start_repeating(message: Message):
 @router.message(Command(commands=['contact']))
 async def write_message_to_dev(message: Message):
     '''написать сообщение разработчику'''
-    chat_id: int = message.chat.id
-    # s.catch_report(chat_id=chat_id)
     await bot.send_message(text=CONTACT,
-                           chat_id=chat_id,
+                           chat_id=message.chat.id,
                            reply_markup=keyboard_cancel)
 
+
+@router.message(Command(commands=['links']))
+async def send_useful_links(message: Message):
+    '''показать полезные ссылки'''
+    await bot.send_message(text=LINKS,
+                           chat_id=message.chat.id,
+                           disable_web_page_preview=True)
 
 @router.message()
 async def send_report(message: Message):
