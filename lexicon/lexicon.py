@@ -93,7 +93,7 @@ def get_profile_message(username: str, list_name: str) -> str:
     return f"""📋 Ваш профиль: <strong>{username}</strong>\n\n\
 📊 Статистика:\n— изучено слов: \
 <strong>{round(len(know_perfect)/1194*100)+round(len(know_good)/1194*10, 2)}%</strong> \
-({len(list_name)} из 1194 слов)\n\
+({len(know_good)+len(know_perfect)} из 1194 слов)\n\
 — начал учить <strong>{len(memorized_words)}</strong> слов(о/а).\n\
 — знаешь хорошо <strong>{len(know_good)}</strong> слов(о/а).\n\
 — знаешь отлично <strong>{len(know_perfect)}</strong> слов(о/а).\n\n\
