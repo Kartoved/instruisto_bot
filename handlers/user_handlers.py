@@ -18,11 +18,9 @@ async def process_start_command(message: Message):
     s.create_user_folders(chat_id)
     s.add_user_to_list(chat_id)
     await process_help_command(message)
-    await message.answer(text=HELP_COMMAND,
-                         reply_markup=keybord_start)
 
 
-@router.message(Command(commands=['help']))
+@router.message(Command(commands=['help', 'start']))
 async def process_help_command(message: Message):
     '''вывод приветствия и справки'''
     await message.answer(text=HELP_COMMAND,
