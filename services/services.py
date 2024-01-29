@@ -94,7 +94,7 @@ def create_user_folders(chat_id: int):
     '''создаёт папку пользователя'''
     if not path.exists(f'users_data/{chat_id}'):
         makedirs(f'users_data/{chat_id}', exist_ok=True)
-        copy('dictionary.json', f'users_data/{chat_id}')
+        copy('services/dictionary.json', f'users_data/{chat_id}')
         rename(f'users_data/{chat_id}/dictionary.json',
                f'users_data/{chat_id}/unexplored_words.json')
         with open(f'users_data/{chat_id}/explored_words.json',
