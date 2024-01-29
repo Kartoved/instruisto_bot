@@ -97,7 +97,7 @@ def get_profile_message(username: str, list_name: str) -> str:
 — начал учить <strong>{len(memorized_words)}</strong> слов(о/а).\n\
 — знаешь хорошо <strong>{len(know_good)}</strong> слов(о/а).\n\
 — знаешь отлично <strong>{len(know_perfect)}</strong> слов(о/а).\n\n\
-📆 Сегодня слов для повторения: <strong>{counter}</strong"""
+📆 Сегодня слов для повторения: <strong>{counter}</strong>"""
 
 
 def calculate_progress(list_of_words: list):
