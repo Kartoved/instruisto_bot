@@ -10,6 +10,7 @@ from config_data.config import bot
 import services.services as s
 
 router: Router = Router()
+statements = {}
 
 
 @router.message(Command(commands=["start"]))
@@ -62,6 +63,12 @@ async def start_repeating(message: Message):
 @router.message(Command(commands=["contact"]))
 async def write_message_to_dev(message: Message):
     """написать сообщение разработчику"""
+    chat_id: int = message.chat.id
+    with open("reports/reports_statements.json", encoding="utf-8") as file:
+        statements = json.load(file)
+        statements[chat_id] = True
+    with open("reports/reports_statements.json", 'w', encoding="utf-8") as file:
+        json.dump(statements, file)
     await bot.send_message(
         text=CONTACT, chat_id=message.chat.id, reply_markup=keyboard_cancel
     )
@@ -79,14 +86,12 @@ async def send_useful_links(message: Message):
 async def send_report(message: Message):
     chat_id: int = message.chat.id
     mes = message.text
-    try:
-        with open("reports/reports.json") as f:
-            reports = json.load(f)
-    except FileNotFoundError:
-        makedirs("reports/", exist_ok=True)
-    s.export_report(chat_id, mes, message.from_user.username)
-    with open("reports/reports.json", "w") as f:
-        json.dump(reports, f)
-    await bot.send_message(
-        chat_id=chat_id, text="😊 Спасибо! Твоё сообщение направлено моему разработчик"
-    )
+    with open("reports/reports_statements.json", encoding="utf-8") as file:
+        statements = json.load(file)
+    if statements[str(chat_id)]:
+        s.export_report(chat_id, mes, message.from_user.username)
+        statements[f'{chat_id}'] = False
+        with open("reports/reports_statements.json", 'w', encoding="utf-8") as file:
+            json.dump(statements, file)
+        await bot.send_message(chat_id=chat_id,
+                            text="😊 Спасибо! Твоё сообщение направлено моему разработчику")

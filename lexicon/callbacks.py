@@ -7,9 +7,11 @@ from config_data.config import bot
 import keyboards.keyboards as k
 import services.services as s
 import lexicon.lexicon as l
+import json
+
 
 router = Router()
-
+statements = {}
 
 @router.callback_query(F.data == 'get next unexplored word')
 async def get_next_unexplored_word(callback: CallbackQuery):
@@ -159,6 +161,11 @@ async def accept_reset(callback: CallbackQuery):
 @router.callback_query(F.data == 'contact')
 async def write_message_to_dev(callback: CallbackQuery):
     chat_id: int = callback.from_user.id
+    with open("reports/reports_statements.json", encoding="utf-8") as file:
+        statements = json.load(file)
+        statements[str(chat_id)] = True
+    with open("reports/reports_statements.json", 'w', encoding="utf-8") as file:
+        json.dump(statements, file)
     await callback.answer('')
     await bot.send_message(text=l.CONTACT,
                            chat_id=chat_id,

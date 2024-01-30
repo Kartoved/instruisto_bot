@@ -9,6 +9,7 @@ from keyboards.keyboards import keyboard_add_word, keyboard_check_word
 from lexicon.lexicon import format_learning_message, format_repeating_message
 
 
+
 async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
     """выдаёт одно слово из списка неизученных"""
     if unexplored_words:
@@ -33,9 +34,10 @@ def change_date(value: int) -> str:
     return date.strftime("%d-%m-%Y")
 
 
-def check_and_change_coefficient(
-    word: dict, value: int, remember: bool = False
-) -> dict:
+
+def check_and_change_coefficient(word: dict,
+                                 value: int,
+                                 remember: bool = False) -> dict:
     """проверяет текущий интервал и изменяет его"""
     if remember and value < 6:
         value += 1
@@ -95,18 +97,24 @@ def export_words(chat_id: str, list_of_words: list, list_name: str):
         json.dump(list_of_words, f, ensure_ascii=False)
 
 
+def create_admin_files():
+    makedirs("users_data", exist_ok=True)
+    makedirs("reports", exist_ok=True)
+    reports = open("reports/reports_statements.json", "w")
+    json.dump({}, reports)
+    reports.close()
+
+
 def create_user_folders(chat_id: int):
     """создаёт папку пользователя"""
     if not path.exists(f"users_data/{chat_id}"):
         makedirs(f"users_data/{chat_id}", exist_ok=True)
         copy("services/dictionary.json", f"users_data/{chat_id}")
-        rename(
-            f"users_data/{chat_id}/dictionary.json",
-            f"users_data/{chat_id}/unexplored_words.json",
-        )
-        with open(
-            f"users_data/{chat_id}/explored_words.json", mode="w", encoding="utf-8"
-        ) as f:
+        rename(f"users_data/{chat_id}/dictionary.json",
+               f"users_data/{chat_id}/unexplored_words.json")
+        with open(f"users_data/{chat_id}/explored_words.json",
+                  mode="w",
+                  encoding="utf-8") as f:
             json.dump([], f)
 
 
