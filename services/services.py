@@ -9,21 +9,17 @@ from keyboards.keyboards import keyboard_add_word, keyboard_check_word
 from lexicon.lexicon import format_learning_message, format_repeating_message
 
 
-
 async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
     """выдаёт одно слово из списка неизученных"""
     if unexplored_words:
         new_word: dict = unexplored_words.pop(0)
-        await bot.send_message(
-            text=format_learning_message(new_word),
-            chat_id=chat_id,
-            reply_markup=keyboard_add_word,
-        )
+        await bot.send_message(text=format_learning_message(new_word),
+                               chat_id=chat_id,
+                               reply_markup=keyboard_add_word)
     else:
         new_word: dict = {}
-        await bot.send_message(
-            text="Все слова изучены. Новых слов нет.", chat_id=chat_id
-        )
+        await bot.send_message(text="Все слова изучены. Новых слов нет.",
+                               chat_id=chat_id)
     return new_word
 
 
@@ -36,43 +32,48 @@ def change_date(value: int) -> str:
 
 
 def check_and_change_coefficient(word: dict,
-                                 value: int,
+                                 interval: int,
                                  remember: bool = False) -> dict:
     """проверяет текущий интервал и изменяет его"""
-    if remember and value < 6:
-        value += 1
-    elif not remember and value > 0:
-        value -= 1
-    word["интервал"]: int = value
-    if value <= 0:
-        word["дата повторения"] = str(change_date(1))
-    elif value == 1:
-        word["дата повторения"] = str(change_date(2))
-    elif value == 2:
-        word["дата повторения"] = str(change_date(7))
-    elif value == 3:
-        word["дата повторения"] = str(change_date(14))
-    elif value == 4:
-        word["дата повторения"] = str(change_date(28))
-    elif value == 5:
-        word["дата повторения"] = str(change_date(84))
-    elif value == 6:
-        word["дата повторения"] = str(change_date(168))
+    if remember and interval < 6:
+        interval += 1
+    elif not remember and interval > 0:
+        interval -= 1
+    word["интервал"]: int = interval
+    interval_to_days = [1, 2, 7, 14, 28, 84, 168]
+    word["дата повторения"] = str(change_date(interval_to_days[interval]))
     return word
+    # if remember and interval < 6:
+    #     interval += 1
+    # elif not remember and interval > 0:
+    #     interval -= 1
+    # word["интервал"]: int = interval
+    # if interval <= 0:
+    #     word["дата повторения"] = str(change_date(1))
+    # elif interval == 1:
+    #     word["дата повторения"] = str(change_date(2))
+    # elif interval == 2:
+    #     word["дата повторения"] = str(change_date(7))
+    # elif interval == 3:
+    #     word["дата повторения"] = str(change_date(14))
+    # elif interval == 4:
+    #     word["дата повторения"] = str(change_date(28))
+    # elif interval == 5:
+    #     word["дата повторения"] = str(change_date(84))
+    # elif interval == 6:
+    #     word["дата повторения"] = str(change_date(168))
+    # return word
 
 
 async def send_explored_word(chat_id: int, explored_words: list) -> dict:
     """отправить пользователю изученное слово"""
     for word in explored_words:
         if datetime.strptime(word["дата повторения"], "%d-%m-%Y") <= datetime.now():
-            return await bot.send_message(
-                text=format_repeating_message(word),
-                chat_id=chat_id,
-                reply_markup=keyboard_check_word,
-            )
-    return await bot.send_message(
-        text="На сегодня слов для повторения нет.", chat_id=chat_id
-    )
+            return await bot.send_message(text=format_repeating_message(word),
+                                          chat_id=chat_id,
+                                          reply_markup=keyboard_check_word)
+    return await bot.send_message(text="На сегодня слов для повторения нет.",
+                                  chat_id=chat_id)
 
 
 def get_explored_word(explored_words: list) -> dict:
@@ -98,6 +99,7 @@ def export_words(chat_id: str, list_of_words: list, list_name: str):
 
 
 def create_admin_files():
+    """создает файлы для админа"""
     makedirs("users_data", exist_ok=True)
     makedirs("reports", exist_ok=True)
     reports = open("reports/reports_statements.json", "w")
@@ -134,6 +136,7 @@ def add_user_to_list(chat_id):
 
 
 def export_report(chat_id: int, report: str, username: str):
+    """экспортирует багрепорт в файл"""
     date = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
     with open(f"reports/{date}.txt", "w", encoding="utf-8") as f:
         f.write(f'from user: {username}\n\n"{report}"')
