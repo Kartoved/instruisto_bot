@@ -88,10 +88,13 @@ async def send_report(message: Message):
     mes = message.text
     with open("reports/reports_statements.json", encoding="utf-8") as file:
         statements = json.load(file)
-    if statements[str(chat_id)]:
-        s.export_report(chat_id, mes, message.from_user.username)
-        statements[f'{chat_id}'] = False
-        with open("reports/reports_statements.json", 'w', encoding="utf-8") as file:
-            json.dump(statements, file)
-        await bot.send_message(chat_id=chat_id,
-                            text="😊 Спасибо! Твоё сообщение направлено моему разработчику")
+    try:
+        if statements[str(chat_id)]:
+            s.export_report(chat_id, mes, message.from_user.username)
+            statements[f'{chat_id}'] = False
+            with open("reports/reports_statements.json", 'w', encoding="utf-8") as file:
+                json.dump(statements, file)
+            await bot.send_message(chat_id=chat_id,
+                                   text="😊 Спасибо! Твоё сообщение направлено моему разработчику")
+    except KeyError:
+        pass

@@ -102,9 +102,8 @@ def create_admin_files():
     """создает файлы для админа"""
     makedirs("users_data", exist_ok=True)
     makedirs("reports", exist_ok=True)
-    reports = open("reports/reports_statements.json", "w")
-    json.dump({}, reports)
-    reports.close()
+    with open("reports/reports_statements.json", "w") as reports:
+        json.dump({}, reports)
 
 
 def create_user_folders(chat_id: int):
@@ -118,7 +117,6 @@ def create_user_folders(chat_id: int):
                   mode="w",
                   encoding="utf-8") as f:
             json.dump([], f)
-
 
 def add_user_to_list(chat_id):
     """добавляет юзера в список юзеров"""
