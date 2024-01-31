@@ -30,7 +30,6 @@ def change_date(value: int) -> str:
     return date.strftime("%d-%m-%Y")
 
 
-
 def check_and_change_coefficient(word: dict,
                                  interval: int,
                                  remember: bool = False) -> dict:
@@ -43,26 +42,6 @@ def check_and_change_coefficient(word: dict,
     interval_to_days = [1, 2, 7, 14, 28, 84, 168]
     word["дата повторения"] = str(change_date(interval_to_days[interval]))
     return word
-    # if remember and interval < 6:
-    #     interval += 1
-    # elif not remember and interval > 0:
-    #     interval -= 1
-    # word["интервал"]: int = interval
-    # if interval <= 0:
-    #     word["дата повторения"] = str(change_date(1))
-    # elif interval == 1:
-    #     word["дата повторения"] = str(change_date(2))
-    # elif interval == 2:
-    #     word["дата повторения"] = str(change_date(7))
-    # elif interval == 3:
-    #     word["дата повторения"] = str(change_date(14))
-    # elif interval == 4:
-    #     word["дата повторения"] = str(change_date(28))
-    # elif interval == 5:
-    #     word["дата повторения"] = str(change_date(84))
-    # elif interval == 6:
-    #     word["дата повторения"] = str(change_date(168))
-    # return word
 
 
 async def send_explored_word(chat_id: int, explored_words: list) -> dict:
@@ -117,6 +96,7 @@ def create_user_folders(chat_id: int):
                   mode="w",
                   encoding="utf-8") as f:
             json.dump([], f)
+
 
 def add_user_to_list(chat_id):
     """добавляет юзера в список юзеров"""

@@ -7,11 +7,13 @@ from config_data.config import bot
 import keyboards.keyboards as k
 import services.services as s
 import lexicon.lexicon as l
+# import handlers.user_handlers as h
 import json
 
 
 router = Router()
 statements = {}
+
 
 @router.callback_query(F.data == 'get next unexplored word')
 async def get_next_unexplored_word(callback: CallbackQuery):
@@ -123,8 +125,10 @@ async def stop_repeating(callback: CallbackQuery):
     await callback.answer('')
     explored_words: list = s.import_words(chat_id, 'explored_words')
     text: str = l.get_profile_message(
-        callback.from_user.username, explored_words)
-    await bot.send_message(chat_id=chat_id, text=text, reply_markup=k.keyboard_profile)
+        callback.from_user.username, explored_words, chat_id)
+    await bot.send_message(chat_id=chat_id,
+                           text=text,
+                           reply_markup=k.keyboard_profile)
 
 
 @router.callback_query(F.data == 'cancel')
@@ -170,7 +174,7 @@ async def write_message_to_dev(callback: CallbackQuery):
     await bot.send_message(text=l.CONTACT,
                            chat_id=chat_id,
                            reply_markup=k.keyboard_cancel)
-    
+
 
 @router.callback_query(F.data == 'show_links')
 async def send_useful_links(callback: CallbackQuery):
@@ -179,4 +183,3 @@ async def send_useful_links(callback: CallbackQuery):
     await bot.send_message(text=l.LINKS,
                            chat_id=callback.from_user.id,
                            disable_web_page_preview=True)
-

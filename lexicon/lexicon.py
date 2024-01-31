@@ -83,10 +83,10 @@ RESET_MESSAGE: str = "‼️‼️‼️ Вы уверены, что хотит�
  слова и придётся учить их заново!"
 
 
-def get_profile_message(username: str, list_name: str) -> str:
+def get_profile_message(username: str, list_name: str, chat_id: int) -> str:
     now = datetime.now().strftime("%d-%m-%Y")
     counter = 0
-    memorized_words, know_good, know_perfect = calculate_progress(list_name)
+    memorized_words, know_good, know_perfect = calculate_progress(list_name, chat_id)
     for word in list_name:
         if word["дата повторения"] <= now:
             counter += 1
@@ -100,19 +100,16 @@ def get_profile_message(username: str, list_name: str) -> str:
 📆 Сегодня слов для повторения: <strong>{counter}</strong>"""
 
 
-def calculate_progress(list_of_words: list):
-    with open("users_data/164720191/explored_words.json", encoding="utf-8") as f:
-        list_of_words: list = json.load(f)
-        memorized_words = []
-        know_good = []
-        know_perfect = []
-        for word in list_of_words:
-            if word["интервал"] <= 1:
-                memorized_words.append(word)
-            elif word["интервал"] <= 3:
-                know_good.append(word)
-            elif word["интервал"] <= 6:
-                know_perfect.append(word)
+def calculate_progress(list_of_words: list,
+                       chat_id: int):
+    with open(f"users_data/{chat_id}/explored_words.json", encoding="utf-8") as f:
+        list_of_words = json.load(f)
+        memorized_words = [
+            word for word in list_of_words if word["интервал"] <= 1]
+        know_good = [word for word in list_of_words if 1 <
+                     word["интервал"] <= 3]
+        know_perfect = [word for word in list_of_words if 3 <
+                        word["интервал"] <= 6]
         return memorized_words, know_good, know_perfect
 
 

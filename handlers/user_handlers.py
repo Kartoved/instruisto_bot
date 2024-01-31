@@ -33,7 +33,7 @@ async def show_profile(message: Message):
     """выводит профиль юзера"""
     chat_id: int = message.chat.id
     explored_words: list = s.import_words(chat_id, "explored_words")
-    text: str = get_profile_message(message.from_user.username, explored_words)
+    text: str = get_profile_message(message.from_user.username, explored_words, chat_id)
     await bot.send_message(chat_id=chat_id, text=text, reply_markup=keyboard_profile)
 
 
@@ -64,30 +64,30 @@ async def start_repeating(message: Message):
 async def write_message_to_dev(message: Message):
     """написать сообщение разработчику"""
     chat_id: int = message.chat.id
-    with open("reports/reports_statements.json", encoding="utf-8") as file:
-        statements = json.load(file)
-        statements[chat_id] = True
-    with open("reports/reports_statements.json", 'w', encoding="utf-8") as file:
-        json.dump(statements, file)
-    await bot.send_message(
-        text=CONTACT, chat_id=message.chat.id, reply_markup=keyboard_cancel
-    )
+    with open("reports/reports_statements.json", encoding="utf-8") as f:
+        statements: dict = json.load(f)
+    statements[chat_id] = True
+    with open("reports/reports_statements.json", 'w', encoding="utf-8") as f:
+        json.dump(statements, f)
+    await bot.send_message(text=CONTACT,
+                           chat_id=message.chat.id,
+                           reply_markup=keyboard_cancel)
 
 
 @router.message(Command(commands=["links"]))
 async def send_useful_links(message: Message):
     """показать полезные ссылки"""
-    await bot.send_message(
-        text=LINKS, chat_id=message.chat.id, disable_web_page_preview=True
-    )
+    await bot.send_message(text=LINKS,
+                           chat_id=message.chat.id,
+                           disable_web_page_preview=True)
 
 
 @router.message()
 async def send_report(message: Message):
     chat_id: int = message.chat.id
-    mes = message.text
+    mes: str = message.text
     with open("reports/reports_statements.json", encoding="utf-8") as file:
-        statements = json.load(file)
+        statements: dict = json.load(file)
     try:
         if statements[str(chat_id)]:
             s.export_report(chat_id, mes, message.from_user.username)
