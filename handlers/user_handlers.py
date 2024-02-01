@@ -5,7 +5,7 @@ from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import Command
 from lexicon.lexicon import HELP_COMMAND, get_profile_message, CONTACT, LINKS
-from keyboards.keyboards import keybord_start, keyboard_profile, keyboard_cancel
+from keyboards.keyboards import keybord_start, keyboard_profile, keyboard_cancel, keyboard_open_profile, keyboard_cancel_report
 from config_data.config import bot
 import services.services as s
 
@@ -33,7 +33,8 @@ async def show_profile(message: Message):
     """выводит профиль юзера"""
     chat_id: int = message.chat.id
     explored_words: list = s.import_words(chat_id, "explored_words")
-    text: str = get_profile_message(message.from_user.username, explored_words, chat_id)
+    text: str = get_profile_message(
+        message.from_user.username, explored_words, chat_id)
     await bot.send_message(chat_id=chat_id, text=text, reply_markup=keyboard_profile)
 
 
@@ -45,7 +46,8 @@ async def start_learning(message: Message):
     unexplored_words: list = s.import_words(chat_id, "unexplored_words")
     new_word: dict = await s.get_unexplored_word(chat_id, unexplored_words)
     if new_word:
-        new_word = s.check_and_change_coefficient(new_word, new_word["интервал"])
+        new_word = s.check_and_change_coefficient(
+            new_word, new_word["интервал"])
         s.export_words(chat_id, unexplored_words, "unexplored_words")
         if new_word not in explored_words:
             explored_words.append(new_word)
@@ -70,8 +72,8 @@ async def write_message_to_dev(message: Message):
     with open("reports/reports_statements.json", 'w', encoding="utf-8") as f:
         json.dump(statements, f)
     await bot.send_message(text=CONTACT,
-                           chat_id=message.chat.id,
-                           reply_markup=keyboard_cancel)
+                           chat_id=chat_id,
+                           reply_markup=keyboard_cancel_report)
 
 
 @router.message(Command(commands=["links"]))
@@ -79,7 +81,8 @@ async def send_useful_links(message: Message):
     """показать полезные ссылки"""
     await bot.send_message(text=LINKS,
                            chat_id=message.chat.id,
-                           disable_web_page_preview=True)
+                           disable_web_page_preview=True,
+                           reply_markup=keyboard_open_profile)
 
 
 @router.message()

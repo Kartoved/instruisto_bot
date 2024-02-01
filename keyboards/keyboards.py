@@ -31,12 +31,16 @@ btn_curve = InlineKeyboardButton(
 btn_about_repeating = InlineKeyboardButton(text='Расскажи подробнее, как ты работаешь!',
                                            callback_data='about bot')
 
+btn_open_profile = InlineKeyboardButton(text='👤 профиль',
+                                        callback_data='stop')
+
 keybord_start = InlineKeyboardMarkup(
-    inline_keyboard=[[btn_curve], [btn_about_repeating]])
+    inline_keyboard=[[btn_open_profile], [btn_curve], [btn_about_repeating]])
 
 btn_mnemo = InlineKeyboardButton(text='Что ещё за мнемотехники такие?',
                                  callback_data='about mnemo')
-keyboard_mnemo = InlineKeyboardMarkup(inline_keyboard=[[btn_mnemo]])
+keyboard_mnemo = InlineKeyboardMarkup(
+    inline_keyboard=[[btn_open_profile], [btn_mnemo]])
 
 # клавиатура профиля
 btn_learning = InlineKeyboardButton(
@@ -68,10 +72,25 @@ btn_cancel = InlineKeyboardButton(
     callback_data='cancel'
 )
 
+btn_cancel_report = InlineKeyboardButton(
+    text='⏹ отмена',
+    callback_data='cancel report'
+)
+
+
+
 keyboard_reset = InlineKeyboardMarkup(
     inline_keyboard=[[btn_cancel, btn_accepting_reset]]
 )
 
+keyboard_cancel_report = InlineKeyboardMarkup(
+    inline_keyboard=[[btn_cancel_report]]
+)
+
 keyboard_cancel = InlineKeyboardMarkup(
     inline_keyboard=[[btn_cancel]]
+)
+
+keyboard_open_profile = InlineKeyboardMarkup(
+    inline_keyboard=[[btn_open_profile]]
 )

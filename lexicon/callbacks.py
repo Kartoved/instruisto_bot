@@ -7,7 +7,6 @@ from config_data.config import bot
 import keyboards.keyboards as k
 import services.services as s
 import lexicon.lexicon as l
-# import handlers.user_handlers as h
 import json
 
 
@@ -80,7 +79,8 @@ async def tell_about_mnemo(callback: CallbackQuery):
     await callback.answer('')
     await bot.send_message(text=l.ABOUT_MNEMO,
                            chat_id=callback.from_user.id,
-                           disable_web_page_preview=True)
+                           disable_web_page_preview=True,
+                           reply_markup=k.keyboard_open_profile)
 
 
 @router.callback_query(F.data == 'help')
@@ -137,49 +137,65 @@ async def cancel_reset(callback: CallbackQuery):
     chat_id: int = callback.from_user.id
     await callback.answer('отмена')
     explored_words: list = s.import_words(chat_id, 'explored_words')
-    text: str = l.get_profile_message(
-        callback.from_user.username, explored_words)
+    text: str = l.get_profile_message(callback.from_user.username,
+                                      explored_words,
+                                      chat_id)
     await callback.message.edit_text(text=text, reply_markup=k.keyboard_profile)
 
+@router.callback_query(F.data == 'cancel report')
+async def cancel_report(callback: CallbackQuery):
+    chat_id: int = callback.from_user.id
+    with open("reports/reports_statements.json", encoding="utf-8") as f:
+        statements = json.load(f)
+        statements[str(chat_id)] = False
+    with open("reports/reports_statements.json", 'w', encoding="utf-8") as f:
+        json.dump(statements, f)
+    await callback.answer('')
+    await callback.message.delete()
 
 @router.callback_query(F.data == 'reset progress')
 async def process_reset_progress(callback: CallbackQuery):
     '''запрашивает подтверждение сброса прогресса'''
     await callback.answer('')
-    await callback.message.edit_text(
-        text=l.RESET_MESSAGE,
-        reply_markup=k.keyboard_reset)
+    await callback.message.edit_text(text=l.RESET_MESSAGE,
+                                     reply_markup=k.keyboard_reset)
 
 
 @router.callback_query(F.data == 'accepting reset')
 async def accept_reset(callback: CallbackQuery):
     '''подтверждаем процесс сброса прогресса'''
     chat_id: int = callback.from_user.id
+    explored_words: list = s.import_words(callback.from_user.id,
+                                          'explored_words')
     await callback.answer('Принято')
     rmtree(f'users_data/{chat_id}')
     s.create_user_folders(chat_id)
-    await callback.message.edit_text(
-        text=f'{callback.from_user.username}, твой прогресс сброшен!')
+    await callback.message.edit_text(text=f'{callback.from_user.username}, твой прогресс сброшен!',
+                                     reply_markup=k.keyboard_open_profile)
+    
 
 
 @router.callback_query(F.data == 'contact')
 async def write_message_to_dev(callback: CallbackQuery):
     chat_id: int = callback.from_user.id
-    with open("reports/reports_statements.json", encoding="utf-8") as file:
-        statements = json.load(file)
+    with open("reports/reports_statements.json", encoding="utf-8") as f:
+        statements = json.load(f)
         statements[str(chat_id)] = True
-    with open("reports/reports_statements.json", 'w', encoding="utf-8") as file:
-        json.dump(statements, file)
+    with open("reports/reports_statements.json", 'w', encoding="utf-8") as f:
+        json.dump(statements, f)
     await callback.answer('')
     await bot.send_message(text=l.CONTACT,
                            chat_id=chat_id,
-                           reply_markup=k.keyboard_cancel)
+                           reply_markup=k.keyboard_cancel_report)
 
 
 @router.callback_query(F.data == 'show_links')
 async def send_useful_links(callback: CallbackQuery):
     '''показать полезные ссылки'''
+    explored_words: list = s.import_words(callback.from_user.id,
+                                          'explored_words')
     await callback.answer('')
     await bot.send_message(text=l.LINKS,
                            chat_id=callback.from_user.id,
-                           disable_web_page_preview=True)
+                           disable_web_page_preview=True,
+                           reply_markup=k.keyboard_open_profile)

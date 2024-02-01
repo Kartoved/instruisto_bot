@@ -20,7 +20,7 @@ HELP_COMMAND: str = """👋 Привет, начинающий <em>эспера�
 Ознакомься с моими командами ниже 👇:
 
 <strong>/help</strong> — <em>🗒 список команд</em>
-<strong>/profile</strong> — <em>📋 профиль</em>
+<strong>/profile</strong> — <em>👤 профиль</em>
 <strong>/contact</strong> — <em>📨 связь с разработчиком</em>
 <strong>/links</strong> — <em>🔗 полезные ссылки на материалы, где ты сможешь глубже изучить Эсперанто</em>
 
@@ -68,7 +68,7 @@ CONTACT: str = '🪲 Нашёл баг или ошибку?\n💡 Есть ид�
 
 LEXICON_COMMANDS_RU: dict[str, str] = {
     "/help": "❓ описание бота, список команд",
-    "/profile": "📋 профиль",
+    "/profile": "👤 профиль",
     "/learning": "📖 учить новые слова",
     "/repeating": "🔁 повторять изученные слов",
     "/links": "🔗 полезные ссылки",
@@ -90,7 +90,7 @@ def get_profile_message(username: str, list_name: str, chat_id: int) -> str:
     for word in list_name:
         if word["дата повторения"] <= now:
             counter += 1
-    return f"""📋 Ваш профиль: <strong>{username}</strong>\n\n\
+    return f"""👤 Твой профиль: <strong>{username}</strong>\n\n\
 📊 Статистика:\n— изучено слов: \
 <strong>{round(len(know_perfect)/1194*100)+round(len(know_good)/1194*10, 2)}%</strong> \
 ({len(know_good)+len(know_perfect)} из 1194 слов)\n\
