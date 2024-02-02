@@ -5,7 +5,7 @@ from os import makedirs, rename, path
 from shutil import copy
 from datetime import datetime, timedelta
 from config_data.config import bot
-from keyboards.keyboards import keyboard_add_word, keyboard_check_word
+from keyboards.keyboards import keyboard_add_word, keyboard_check_word, keyboard_open_profile
 from lexicon.lexicon import format_learning_message, format_repeating_message
 
 
@@ -51,8 +51,20 @@ async def send_explored_word(chat_id: int, explored_words: list) -> dict:
             return await bot.send_message(text=format_repeating_message(word),
                                           chat_id=chat_id,
                                           reply_markup=keyboard_check_word)
-    return await bot.send_message(text="На сегодня слов для повторения нет.",
-                                  chat_id=chat_id)
+    date_of_closest_repetition = get_date_of_closest_repetition(explored_words)
+    return await bot.send_message(text=f'📆 На сегодня слов для повторения нет.\n\n\
+Ближайшее повторение слов будет <strong> {date_of_closest_repetition}</strong>',
+                                  chat_id=chat_id,
+                                  reply_markup=keyboard_open_profile)
+
+
+def get_date_of_closest_repetition(explored_words: list) -> str:
+    """получить дату ближайшего повторения"""
+    date_of_closest_repetition = datetime.strptime(explored_words[0]["дата повторения"], "%d-%m-%Y")
+    for word in explored_words:
+        if datetime.strptime(word["дата повторения"], "%d-%m-%Y") < date_of_closest_repetition:
+            date_of_closest_repetition = datetime.strptime(word["дата повторения"], "%d-%m-%Y")
+    return date_of_closest_repetition.strftime("%d-%m-%Y")
 
 
 def get_explored_word(explored_words: list) -> dict:
