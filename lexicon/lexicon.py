@@ -137,7 +137,7 @@ def format_learning_message(new_word: dict) -> str:
 
 
 def format_repeating_message(word: dict) -> str:
-    return f"""❓ Как будет <em>{word['на русском']}</em> на Эсперанто?\n❗️ \
-Ответ: <em><tg-spoiler>{word['на эсперанто']}</tg-spoiler></em>\n\
-📋 Пример предложения: <em><tg-spoiler>{word['пример предложения']}\
+    return f"""❓ Как будет <em>{word['на русском']}</em> на Эсперанто?\n\n\
+<strong>Ответ:</strong> <em><tg-spoiler>{word['на эсперанто']}</tg-spoiler></em>\n\n\
+<strong>Пример предложения:</strong>\n<em><tg-spoiler>{word['пример предложения']}\
 </tg-spoiler></em>"""
