@@ -19,8 +19,8 @@ HELP_COMMAND: str = """👋 Привет, начинающий <em>эспера�
 Я помогу тебе выучить этот прекрасный язык!
 Ознакомься с моими командами ниже 👇:
 
-<strong>/help</strong> — <em>🗒 список команд</em>
 <strong>/profile</strong> — <em>👤 профиль</em>
+<strong>/help</strong> — <em>🗒 список команд</em>
 <strong>/contact</strong> — <em>📨 связь с разработчиком</em>
 <strong>/links</strong> — <em>🔗 полезные ссылки на материалы, где ты сможешь глубже изучить Эсперанто</em>
 
@@ -67,8 +67,8 @@ CONTACT: str = '🪲 Нашёл баг или ошибку?\n💡 Есть ид�
 Если передумал, то нажми <em>"отмена"</em>'
 
 LEXICON_COMMANDS_RU: dict[str, str] = {
-    "/help": "❓ описание бота, список команд",
     "/profile": "👤 профиль",
+    "/help": "❓ описание бота, список команд",
     "/learning": "📖 учить новые слова",
     "/repeating": "🔁 повторять изученные слов",
     "/links": "🔗 полезные ссылки",
@@ -108,7 +108,7 @@ def get_profile_message(username: str, list_name: str, chat_id: int) -> str:
         if word["дата повторения"] <= now:
             counter += 1
     return f"""👤 Твой профиль: <strong>{username}</strong>\n\n\
-📊 Статистика:\n— изучено слов: \
+📊 Статистика:\n— изучил слов: \
 <strong>{round(len(know_perfect)/1194*100)+round(len(know_good)/1194*10, 2)}%</strong> \
 ({len(know_good)+len(know_perfect)} из 1194 слов)\n\
 — начал учить <strong>{len(memorized_words)}</strong> слов(о/а).\n\

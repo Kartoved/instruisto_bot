@@ -142,6 +142,7 @@ async def cancel_reset(callback: CallbackQuery):
                                       chat_id)
     await callback.message.edit_text(text=text, reply_markup=k.keyboard_profile)
 
+
 @router.callback_query(F.data == 'cancel report')
 async def cancel_report(callback: CallbackQuery):
     chat_id: int = callback.from_user.id
@@ -152,6 +153,7 @@ async def cancel_report(callback: CallbackQuery):
         json.dump(statements, f)
     await callback.answer('')
     await callback.message.delete()
+
 
 @router.callback_query(F.data == 'reset progress')
 async def process_reset_progress(callback: CallbackQuery):
@@ -172,7 +174,6 @@ async def accept_reset(callback: CallbackQuery):
     s.create_user_folders(chat_id)
     await callback.message.edit_text(text=f'{callback.from_user.username}, твой прогресс сброшен!',
                                      reply_markup=k.keyboard_open_profile)
-    
 
 
 @router.callback_query(F.data == 'contact')
