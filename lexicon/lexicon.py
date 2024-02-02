@@ -78,8 +78,6 @@ LEXICON_COMMANDS_RU: dict[str, str] = {
 ABOUT_UPDATE: str = f""
 
 
-
-
 RESET_MESSAGE: str = "‼️‼️‼️ Вы уверены, что хотите сбросить прогресс? ‼️‼️‼️\
 \n\nЭто действие НЕОБРАТИМО! Сбросится статистика, удалятся все изученные\
  слова и придётся учить их заново!"
@@ -93,14 +91,16 @@ def get_date_of_closest_repetition(explored_words: list) -> str:
         if datetime.strptime(word["дата повторения"], "%d-%m-%Y") < date_of_closest_repetition:
             date_of_closest_repetition = datetime.strptime(
                 word["дата повторения"], "%d-%m-%Y")
-    if date_of_closest_repetition.strftime("%d-%m-%Y") ==  datetime.now().strftime("%d-%m-%Y"):
+    if date_of_closest_repetition.strftime("%d-%m-%Y") == datetime.now().strftime("%d-%m-%Y"):
         return ' сегодня.'
     return date_of_closest_repetition.strftime("%d-%m-%Y")
+
 
 def get_profile_message(username: str, list_name: str, chat_id: int) -> str:
     now = datetime.now().strftime("%d-%m-%Y")
     counter = 0
-    memorized_words, know_good, know_perfect = calculate_progress(list_name, chat_id)
+    memorized_words, know_good, know_perfect = calculate_progress(
+        list_name, chat_id)
     with open(f"users_data/{chat_id}/explored_words.json", encoding="utf-8") as f:
         list_of_words = json.load(f)
     date_of_closest_repetition = get_date_of_closest_repetition(list_of_words)
@@ -132,7 +132,8 @@ def calculate_progress(list_of_words: list,
 
 
 def format_learning_message(new_word: dict) -> str:
-    return f"""✍ <em>{new_word['на русском'].upper()}</em> → <em>{new_word['на эсперанто'].upper()}</em>\n\n☝️ Пример предложения: <em>{new_word['пример предложения']}</em>"""
+    return f"""✍  <em>{new_word['на русском']}</em> → <em>{new_word['на эсперанто']}</em>\n\n\
+<strong>Пример предложения:</strong>\n<em>{new_word['пример предложения']}</em>"""
 
 
 def format_repeating_message(word: dict) -> str:
