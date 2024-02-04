@@ -60,10 +60,12 @@ async def send_explored_word(chat_id: int, explored_words: list) -> dict:
 
 def get_date_of_closest_repetition(explored_words: list) -> str:
     """получить дату ближайшего повторения"""
-    date_of_closest_repetition = datetime.strptime(explored_words[0]["дата повторения"], "%d-%m-%Y")
+    date_of_closest_repetition = datetime.strptime(
+        explored_words[0]["дата повторения"], "%d-%m-%Y")
     for word in explored_words:
         if datetime.strptime(word["дата повторения"], "%d-%m-%Y") < date_of_closest_repetition:
-            date_of_closest_repetition = datetime.strptime(word["дата повторения"], "%d-%m-%Y")
+            date_of_closest_repetition = datetime.strptime(
+                word["дата повторения"], "%d-%m-%Y")
     return date_of_closest_repetition.strftime("%d-%m-%Y")
 
 
@@ -132,7 +134,6 @@ def export_report(chat_id: int, report: str, username: str):
         f.write(f'from user: {username}\n\n"{report}"')
 
 
-
 def send_reminder(chat_id):
     """отправляет напоминание о повторении слов в нужный день"""
     list_of_words = import_words(chat_id, "explored_words")
@@ -140,7 +141,8 @@ def send_reminder(chat_id):
     for word in list_of_words:
         if datetime.strptime(word["дата повторения"], "%d-%m-%Y") <= datetime.now().strftime("%d-%m-%Y"):
             return text
-        
+
+
 async def check_users_which_should_be_notified(user_list):
     """проверяет юзеров, кто должен получить напоминание"""
     if datetime.now().strftime("%H:%M") == datetime.strptime("17:01", "%H:%M"):

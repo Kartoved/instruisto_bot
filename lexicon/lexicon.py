@@ -91,7 +91,7 @@ def get_date_of_closest_repetition(explored_words: list) -> str:
         if datetime.strptime(word["дата повторения"], "%d-%m-%Y") < date_of_closest_repetition:
             date_of_closest_repetition = datetime.strptime(
                 word["дата повторения"], "%d-%m-%Y")
-    if date_of_closest_repetition.strftime("%d-%m-%Y") == datetime.now().strftime("%d-%m-%Y"):
+    if date_of_closest_repetition.strftime("%d-%m-%Y") <= datetime.now().strftime("%d-%m-%Y"):
         return ' сегодня.'
     return date_of_closest_repetition.strftime("%d-%m-%Y")
 
@@ -108,14 +108,14 @@ def get_profile_message(username: str, list_name: str, chat_id: int) -> str:
         if word["дата повторения"] <= now:
             counter += 1
     return f"""👤 Твой профиль: <strong>{username}</strong>\n\n\
-📊 Статистика:\n— изучил слов: \
-<strong>{round(len(know_perfect)/1194*100)+round(len(know_good)/1194*10, 2)}%</strong> \
-({len(know_good)+len(know_perfect)} из 1194 слов)\n\
-— начал учить <strong>{len(memorized_words)}</strong> слов(о/а).\n\
-— знаешь хорошо <strong>{len(know_good)}</strong> слов(о/а).\n\
-— знаешь отлично <strong>{len(know_perfect)}</strong> слов(о/а).\n\n\
+📊 Статистика (в количестве слов):\n• изучил \
+<strong>{len(know_good)+len(know_perfect)} из 1194 </strong>\
+({round(len(know_perfect)/1194*100)+round(len(know_good)/1194*10, 2)}%) \n\
+• начал учить <strong>{len(memorized_words)}</strong>\n\
+• знаешь хорошо <strong>{len(know_good)}</strong>\n\
+• знаешь отлично <strong>{len(know_perfect)}</strong>\n\n\
 📆 Сегодня слов для повторения: <strong>{counter}</strong>.\n\
-Ближайшая дата повторения <strong>{date_of_closest_repetition}</strong>"""
+Ближайшая дата повторения<strong>{date_of_closest_repetition}</strong>"""
 
 
 def calculate_progress(list_of_words: list,
@@ -124,9 +124,9 @@ def calculate_progress(list_of_words: list,
         list_of_words = json.load(f)
         memorized_words = [
             word for word in list_of_words if word["интервал"] <= 1]
-        know_good = [word for word in list_of_words if 1 <
+        know_good = [word for word in list_of_words if 2 <
                      word["интервал"] <= 3]
-        know_perfect = [word for word in list_of_words if 3 <
+        know_perfect = [word for word in list_of_words if 4 <
                         word["интервал"] <= 6]
         return memorized_words, know_good, know_perfect
 
