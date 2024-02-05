@@ -71,8 +71,9 @@ LEXICON_COMMANDS_RU: dict[str, str] = {
     "/help": "❓ описание бота, список команд",
     "/learning": "📖 учить новые слова",
     "/repeating": "🔁 повторять изученные слов",
+    "/reminders": "⏰ установить напоминание",
     "/links": "🔗 полезные ссылки",
-    "/contact": "📨 связь с разработчиком",
+    "/contact": "📨 связь с разработчиком",    
 }
 
 ABOUT_UPDATE: str = f""
@@ -91,14 +92,12 @@ def get_date_of_closest_repetition(explored_words: list) -> str:
         for word in explored_words:
             if datetime.strptime(word["дата повторения"], "%d-%m-%Y") < date_of_closest_repetition:
                 date_of_closest_repetition = datetime.strptime(
-        
                     word["дата повторения"], "%d-%m-%Y")
         if date_of_closest_repetition.strftime("%d-%m-%Y") <= datetime.now().strftime("%d-%m-%Y"):
-            return ' сегодня.'
+            return 'сегодня.'
         return date_of_closest_repetition.strftime("%d-%m-%Y")
     except IndexError:
-        return ' не назначена. Начните учить слова, чтобы их повторять.'
-        
+        return 'не назначена. Начните учить слова, чтобы их повторять.'
 
 
 def get_profile_message(username: str, list_name: str, chat_id: int) -> str:
@@ -120,7 +119,8 @@ def get_profile_message(username: str, list_name: str, chat_id: int) -> str:
 • знаешь хорошо <strong>{len(know_good)}</strong>\n\
 • знаешь отлично <strong>{len(know_perfect)}</strong>\n\n\
 📆 Сегодня слов для повторения: <strong>{counter}</strong>.\n\
-Ближайшая дата повторения<strong>{date_of_closest_repetition}</strong>"""
+Ближайшая дата повторения <strong>{date_of_closest_repetition}</strong>\n
+{get_time_of_reminder(chat_id)}"""
 
 
 def calculate_progress(list_of_words: list,
@@ -146,3 +146,12 @@ def format_repeating_message(word: dict) -> str:
 <strong>Ответ:</strong> <em><tg-spoiler>{word['на эсперанто']}</tg-spoiler></em>\n\n\
 <strong>Пример предложения:</strong>\n<em><tg-spoiler>{word['пример предложения']}\
 </tg-spoiler></em>"""
+
+
+def get_time_of_reminder(chat_id):
+    with open('users_data/reminders.json', encoding="utf-8") as f:
+        reminders = json.load(f)
+        try:
+            return f"⏰ Напоминания приходят в <strong>{reminders[str(chat_id)]}</strong> в дни повторений."
+        except KeyError:
+            return "⏰ Напоминания не установлены."

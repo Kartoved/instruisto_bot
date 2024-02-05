@@ -7,7 +7,7 @@ from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import Command
 from lexicon.lexicon import HELP_COMMAND, get_profile_message, CONTACT, LINKS
-from keyboards.keyboards import keybord_start, keyboard_profile, keyboard_cancel, keyboard_open_profile, keyboard_cancel_report
+from keyboards.keyboards import *
 from config_data.config import bot
 import services.services as s
 
@@ -87,6 +87,20 @@ async def send_useful_links(message: Message):
                            reply_markup=keyboard_open_profile)
 
 
+@router.message(Command(commands=["reminders"]))
+async def reminder(message: Message):
+    '''установить напоминание'''
+    chat_id: int = message.chat.id
+    with open("users_data/statements.json", encoding="utf-8") as f:
+        statements = json.load(f)
+    statements[str(chat_id)] = 2
+    with open("users_data/statements.json", 'w', encoding="utf-8") as f:
+        json.dump(statements, f)
+    await bot.send_message(text='Напиши время, в которое должно приходить напоминание, в формате <strong>чч:мм</strong>.\nЛибо удали напоминание',
+                           chat_id=chat_id,
+                           reply_markup=keyboard_set_reminder)
+
+
 @router.message()
 async def send_report(message: Message):
     chat_id: int = message.chat.id
@@ -117,7 +131,3 @@ async def send_report(message: Message):
                 await bot.send_message(chat_id=chat_id, text="❌ Время введено некорректно! Введите время в формате <strong>чч:мм</strong>!")
     except KeyError:
         pass
-
-
-
-

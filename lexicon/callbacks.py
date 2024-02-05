@@ -201,6 +201,7 @@ async def send_useful_links(callback: CallbackQuery):
                            disable_web_page_preview=True,
                            reply_markup=k.keyboard_open_profile)
 
+
 @router.callback_query(F.data == 'set reminder')
 async def set_reminder(callback: CallbackQuery):
     '''установить напоминание'''
@@ -211,6 +212,25 @@ async def set_reminder(callback: CallbackQuery):
     with open("users_data/statements.json", 'w', encoding="utf-8") as f:
         json.dump(statements, f)
     await callback.answer('')
-    await bot.send_message(text='Напиши время, в которое должно приходить напоминание, в формате <strong>чч:мм</strong>.',
+    await bot.send_message(text='Напиши время, в которое должно приходить напоминание, в формате <strong>чч:мм</strong>.\nЛибо удали напоминание',
                            chat_id=chat_id,
-                           reply_markup=k.keyboard_cancel_report)
+                           reply_markup=k.keyboard_set_reminder)
+
+
+@router.callback_query(F.data == 'delete reminder')
+async def delete_reminder(callback: CallbackQuery):
+    chat_id: int = callback.from_user.id
+    await callback.answer('')
+    with open("users_data/reminders.json", encoding="utf-8") as f:
+        reminders = json.load(f)
+        try:
+            del reminders[str(chat_id)]
+            with open("users_data/reminders.json", 'w', encoding="utf-8") as f:
+                json.dump(reminders, f)
+            await callback.message.delete()
+            await bot.send_message(text='✅ Напоминание удалено',
+                                   chat_id=chat_id,
+                                   reply_markup=k.keyboard_open_profile)
+        except KeyError:
+            await callback.message.edit_text(text='У тебя и не было напоминаний',
+                                             reply_markup=k.keyboard_open_profile)

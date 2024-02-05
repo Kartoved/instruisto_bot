@@ -24,7 +24,7 @@ keyboard_check_word = InlineKeyboardMarkup(
     inline_keyboard=[[btn_forgot, btn_stop, btn_remember]])
 
 btn_set_reminder = InlineKeyboardButton(
-    text='⏰ установить напоминание',
+    text='⏰  напоминание',
     callback_data='set reminder')
 # инлайн-клавиатура для старта
 btn_curve = InlineKeyboardButton(
@@ -80,6 +80,11 @@ btn_cancel_report = InlineKeyboardButton(
 )
 
 
+btn_delete_reminder = InlineKeyboardButton(
+    text='❌  удалить напоминание',
+    callback_data='delete reminder'
+)
+
 keyboard_reset = InlineKeyboardMarkup(
     inline_keyboard=[[btn_cancel, btn_accepting_reset]]
 )
@@ -96,11 +101,12 @@ keyboard_open_profile = InlineKeyboardMarkup(
     inline_keyboard=[[btn_open_profile]]
 )
 
-keyboard_set_reminder = InlineKeyboardMarkup(
-    inline_keyboard=[[btn_set_reminder]]
-)
-
 
 keyboard_repeating = InlineKeyboardMarkup(
     inline_keyboard=[[btn_repeating]]
+)
+
+
+keyboard_set_reminder = InlineKeyboardMarkup(
+    inline_keyboard=[[btn_delete_reminder], [btn_cancel_report]]
 )
