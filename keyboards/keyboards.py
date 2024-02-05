@@ -100,3 +100,7 @@ keyboard_set_reminder = InlineKeyboardMarkup(
     inline_keyboard=[[btn_set_reminder]]
 )
 
+
+keyboard_repeating = InlineKeyboardMarkup(
+    inline_keyboard=[[btn_repeating]]
+)

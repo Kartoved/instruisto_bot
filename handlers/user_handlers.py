@@ -102,23 +102,22 @@ async def send_report(message: Message):
             with open("users_data/statements.json", 'w', encoding="utf-8") as f:
                 json.dump(statements, f)
             await bot.send_message(chat_id=chat_id,
-                                   text="😊 Спасибо! Твоё сообщение направлено моему разработчику")
+                                   text="😊 Спасибо! Твоё сообщение направлено моему разработчику.")
         elif statements[str(chat_id)] == 2:
             if s.check_input_time(mes):
                 reminders[f'{chat_id}'] = mes
-                print(reminders)
                 statements[f'{chat_id}'] = 0
                 with open("users_data/reminders.json", 'w', encoding="utf-8") as f:
                     json.dump(reminders, f)
                 with open("users_data/statements.json", 'w', encoding="utf-8") as f:
                     json.dump(statements, f)
+                s.run_scheduler()
+                await bot.send_message(chat_id=chat_id, text="✅ Напоминание установлено. Ты можешь всегда изменить или удалить его.")
             else:
                 await bot.send_message(chat_id=chat_id, text="❌ Время введено некорректно! Введите время в формате <strong>чч:мм</strong>!")
     except KeyError:
         pass
 
 
-async def send_message_cron(bot: bot, chat_id: int):
-    await bot.send_message(chat_id, text='Пора повторять слова!')
 
 

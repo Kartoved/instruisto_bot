@@ -1,11 +1,12 @@
 """необходимые функции"""
 
 import json
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from os import makedirs, rename, path
 from shutil import copy
 from datetime import datetime, timedelta
 from config_data.config import bot
-from keyboards.keyboards import keyboard_add_word, keyboard_check_word, keyboard_open_profile
+from keyboards.keyboards import keyboard_add_word, keyboard_check_word, keyboard_open_profile, keyboard_repeating
 from lexicon.lexicon import format_learning_message, format_repeating_message
 
 
@@ -95,8 +96,15 @@ def create_admin_files():
     """создает файлы для админа"""
     makedirs("users_data", exist_ok=True)
     makedirs("reports", exist_ok=True)
-    with open("reports/reports_statements.json", "w") as reports:
-        json.dump({}, reports)
+    if not path.exists("users_data/statements.json"):
+        with open("users_data/statements.json", "w") as f:
+            json.dump({}, f)
+    if not path.exists("users_data/reminders.json"):
+        with open("users_data/reminders.json", "w") as f:
+            json.dump({}, f)
+    if not path.exists("users_data/user_list.json"):
+        with open("users_data/user_list.json", "w") as f:
+            json.dump({}, f)
 
 
 def create_user_folders(chat_id: int):
@@ -141,3 +149,30 @@ def check_input_time(text: str) -> bool:
         return True
     except ValueError:
         return False
+
+
+def run_scheduler():
+    scheduler = AsyncIOScheduler()
+    with open('users_data/reminders.json', 'r', encoding='utf-8') as f:
+        reminders = json.load(f)
+    who_needs_reminder: list = []
+    for key in reminders.keys():
+        with open(f"users_data/{key}/explored_words.json", encoding="utf-8") as f:
+            explored_words = json.load(f)
+        for word in explored_words:
+            if datetime.strptime(word["дата повторения"], "%d-%m-%Y").strftime("%d-%m-%Y") <= datetime.now().strftime("%d-%m-%Y"):
+                who_needs_reminder.append(key)
+    for man, value in reminders.items():
+        if man in who_needs_reminder:
+            scheduler.add_job(send_message_cron,
+                              trigger='cron',
+                              hour=value[0:2],
+                              minute=value[3:5],
+                              kwargs={'bot': bot, 'chat_id': man})
+    scheduler.start()
+
+
+async def send_message_cron(bot: bot, chat_id: int):
+    await bot.send_message(chat_id,
+                           text='Пора повторять слова!',
+                           reply_markup=keyboard_repeating)

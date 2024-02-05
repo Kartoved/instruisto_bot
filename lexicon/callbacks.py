@@ -211,6 +211,6 @@ async def set_reminder(callback: CallbackQuery):
     with open("users_data/statements.json", 'w', encoding="utf-8") as f:
         json.dump(statements, f)
     await callback.answer('')
-    await bot.send_message(text='Пришли время, в которое должно приходить напоминание в формате <strong>чч:мм</strong>, без кавычек:',
+    await bot.send_message(text='Напиши время, в которое должно приходить напоминание, в формате <strong>чч:мм</strong>.',
                            chat_id=chat_id,
                            reply_markup=k.keyboard_cancel_report)
