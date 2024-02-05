@@ -68,10 +68,10 @@ async def start_repeating(message: Message):
 async def write_message_to_dev(message: Message):
     """написать сообщение разработчику"""
     chat_id: int = message.chat.id
-    with open("reports/reports_statements.json", encoding="utf-8") as f:
+    with open("users_data/statements.json", encoding="utf-8") as f:
         statements: dict = json.load(f)
-    statements[chat_id] = True
-    with open("reports/reports_statements.json", 'w', encoding="utf-8") as f:
+    statements[chat_id] = 1
+    with open("users_data/statements.json", 'w', encoding="utf-8") as f:
         json.dump(statements, f)
     await bot.send_message(text=CONTACT,
                            chat_id=chat_id,
@@ -91,16 +91,29 @@ async def send_useful_links(message: Message):
 async def send_report(message: Message):
     chat_id: int = message.chat.id
     mes: str = message.text
-    with open("reports/reports_statements.json", encoding="utf-8") as file:
-        statements: dict = json.load(file)
+    with open("users_data/statements.json", encoding="utf-8") as f:
+        statements: dict = json.load(f)
+    with open("users_data/reminders.json", encoding="utf-8") as f:
+        reminders = json.load(f)
     try:
-        if statements[str(chat_id)]:
+        if statements[str(chat_id)] == 1:
             s.export_report(chat_id, mes, message.from_user.username)
-            statements[f'{chat_id}'] = False
-            with open("reports/reports_statements.json", 'w', encoding="utf-8") as file:
-                json.dump(statements, file)
+            statements[f'{chat_id}'] = 0
+            with open("users_data/statements.json", 'w', encoding="utf-8") as f:
+                json.dump(statements, f)
             await bot.send_message(chat_id=chat_id,
                                    text="😊 Спасибо! Твоё сообщение направлено моему разработчику")
+        elif statements[str(chat_id)] == 2:
+            if s.check_input_time(mes):
+                reminders[f'{chat_id}'] = mes
+                print(reminders)
+                statements[f'{chat_id}'] = 0
+                with open("users_data/reminders.json", 'w', encoding="utf-8") as f:
+                    json.dump(reminders, f)
+                with open("users_data/statements.json", 'w', encoding="utf-8") as f:
+                    json.dump(statements, f)
+            else:
+                await bot.send_message(chat_id=chat_id, text="❌ Время введено некорректно! Введите время в формате <strong>чч:мм</strong>!")
     except KeyError:
         pass
 
@@ -109,8 +122,3 @@ async def send_message_cron(bot: bot, chat_id: int):
     await bot.send_message(chat_id, text='Пора повторять слова!')
 
 
-# async def send_reminder_to_users(bot: bot):
-#     with open('users_data/reminders.json', 'r', encoding='utf-8') as f:
-#         reminders = json.load(f)
-#     for chat_id in reminders.keys():
-#         await bot.send_message(chat_id, text='Пора повторять слова!')

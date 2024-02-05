@@ -146,10 +146,10 @@ async def cancel_reset(callback: CallbackQuery):
 @router.callback_query(F.data == 'cancel report')
 async def cancel_report(callback: CallbackQuery):
     chat_id: int = callback.from_user.id
-    with open("reports/reports_statements.json", encoding="utf-8") as f:
+    with open("users_data/statements.json", encoding="utf-8") as f:
         statements = json.load(f)
-        statements[str(chat_id)] = False
-    with open("reports/reports_statements.json", 'w', encoding="utf-8") as f:
+        statements[str(chat_id)] = 0
+    with open("users_data/statements.json", 'w', encoding="utf-8") as f:
         json.dump(statements, f)
     await callback.answer('')
     await callback.message.delete()
@@ -179,10 +179,10 @@ async def accept_reset(callback: CallbackQuery):
 @router.callback_query(F.data == 'contact')
 async def write_message_to_dev(callback: CallbackQuery):
     chat_id: int = callback.from_user.id
-    with open("reports/reports_statements.json", encoding="utf-8") as f:
+    with open("users_data/statements.json", encoding="utf-8") as f:
         statements = json.load(f)
-        statements[str(chat_id)] = True
-    with open("reports/reports_statements.json", 'w', encoding="utf-8") as f:
+        statements[str(chat_id)] = 1
+    with open("users_data/statements.json", 'w', encoding="utf-8") as f:
         json.dump(statements, f)
     await callback.answer('')
     await bot.send_message(text=l.CONTACT,
@@ -200,3 +200,17 @@ async def send_useful_links(callback: CallbackQuery):
                            chat_id=callback.from_user.id,
                            disable_web_page_preview=True,
                            reply_markup=k.keyboard_open_profile)
+
+@router.callback_query(F.data == 'set reminder')
+async def set_reminder(callback: CallbackQuery):
+    '''установить напоминание'''
+    chat_id: int = callback.from_user.id
+    with open("users_data/statements.json", encoding="utf-8") as f:
+        statements = json.load(f)
+        statements[str(chat_id)] = 2
+    with open("users_data/statements.json", 'w', encoding="utf-8") as f:
+        json.dump(statements, f)
+    await callback.answer('')
+    await bot.send_message(text='Пришли время, в которое должно приходить напоминание в формате <strong>чч:мм</strong>, без кавычек:',
+                           chat_id=chat_id,
+                           reply_markup=k.keyboard_cancel_report)

@@ -133,3 +133,11 @@ def export_report(chat_id: int, report: str, username: str):
     with open(f"reports/{date}.txt", "w", encoding="utf-8") as f:
         f.write(f'from user: {username}\n\n"{report}"')
 
+
+def check_input_time(text: str) -> bool:
+    """проверяет введённое время"""
+    try:
+        datetime.strptime(text, "%H:%M")
+        return True
+    except ValueError:
+        return False

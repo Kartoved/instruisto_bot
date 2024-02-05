@@ -23,7 +23,9 @@ btn_remember = InlineKeyboardButton(
 keyboard_check_word = InlineKeyboardMarkup(
     inline_keyboard=[[btn_forgot, btn_stop, btn_remember]])
 
-
+btn_set_reminder = InlineKeyboardButton(
+    text='⏰ установить напоминание',
+    callback_data='set reminder')
 # инлайн-клавиатура для старта
 btn_curve = InlineKeyboardButton(
     text='Кривая Эббингауза. Википедия',
@@ -58,8 +60,8 @@ btn_help = InlineKeyboardButton(
 keyboard_profile = InlineKeyboardMarkup(
     inline_keyboard=[[btn_learning, btn_repeating],
                      [btn_reset_progress, btn_links],
-                     [btn_contact_with_dev],
-                     [btn_help]])
+                     [btn_help, btn_set_reminder],
+                     [btn_contact_with_dev]],)
 
 # клавиатура для удаления прогресса профиля
 btn_accepting_reset = InlineKeyboardButton(
@@ -78,7 +80,6 @@ btn_cancel_report = InlineKeyboardButton(
 )
 
 
-
 keyboard_reset = InlineKeyboardMarkup(
     inline_keyboard=[[btn_cancel, btn_accepting_reset]]
 )
@@ -94,3 +95,8 @@ keyboard_cancel = InlineKeyboardMarkup(
 keyboard_open_profile = InlineKeyboardMarkup(
     inline_keyboard=[[btn_open_profile]]
 )
+
+keyboard_set_reminder = InlineKeyboardMarkup(
+    inline_keyboard=[[btn_set_reminder]]
+)
+
