@@ -133,20 +133,3 @@ def export_report(chat_id: int, report: str, username: str):
     with open(f"reports/{date}.txt", "w", encoding="utf-8") as f:
         f.write(f'from user: {username}\n\n"{report}"')
 
-
-def send_reminder(chat_id):
-    """отправляет напоминание о повторении слов в нужный день"""
-    list_of_words = import_words(chat_id, "explored_words")
-    text = f'Привет! Сегодня есть слова для повторения! Давай заниматься!'
-    for word in list_of_words:
-        if datetime.strptime(word["дата повторения"], "%d-%m-%Y") <= datetime.now().strftime("%d-%m-%Y"):
-            return text
-
-
-async def check_users_which_should_be_notified(user_list):
-    """проверяет юзеров, кто должен получить напоминание"""
-    if datetime.now().strftime("%H:%M") == datetime.strptime("17:01", "%H:%M"):
-        print('fuck yeah')
-        for user in user_list:
-            if send_reminder(user):
-                await bot.send_message(chat_id=user, text=send_reminder(user))

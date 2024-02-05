@@ -1,5 +1,7 @@
 """хендлеры"""
 import json
+import asyncio
+import aioschedule
 from os import makedirs
 from aiogram import Router, F
 from aiogram.types import Message
@@ -103,3 +105,12 @@ async def send_report(message: Message):
         pass
 
 
+async def send_message_cron(bot: bot, chat_id: int):
+    await bot.send_message(chat_id, text='Пора повторять слова!')
+
+
+# async def send_reminder_to_users(bot: bot):
+#     with open('users_data/reminders.json', 'r', encoding='utf-8') as f:
+#         reminders = json.load(f)
+#     for chat_id in reminders.keys():
+#         await bot.send_message(chat_id, text='Пора повторять слова!')
