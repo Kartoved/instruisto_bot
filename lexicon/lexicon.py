@@ -17,7 +17,7 @@ LINKS: str = """🔗 Полезные ссылки:
 HELP_COMMAND: str = """👋 Привет, начинающий <em>эсперантист</em>!
 Я бот-преподаватель языка <strong>Эсперанто</strong>.
 Я помогу тебе выучить этот прекрасный язык!
-Ознакомься с моими командами ниже 👇:
+Ознакомься с моими командами ниже (все команды кликабельны)👇:
 
 <strong>/profile</strong> — <em>👤 профиль</em>
 <strong>/help</strong> — <em>🗒 список команд</em>
@@ -102,6 +102,7 @@ def get_date_of_closest_repetition(explored_words: list) -> str:
 
 
 def get_profile_message(username: str, list_name: str, chat_id: int) -> str:
+    """получить сообщение профиля"""
     now = datetime.now().strftime("%d-%m-%Y")
     counter = 0
     memorized_words, know_good, know_perfect = calculate_progress(
@@ -126,6 +127,7 @@ def get_profile_message(username: str, list_name: str, chat_id: int) -> str:
 
 def calculate_progress(list_of_words: list,
                        chat_id: int):
+    """подсчитать прогресс"""
     with open(f"users_data/{chat_id}/explored_words.json", encoding="utf-8") as f:
         list_of_words = json.load(f)
         memorized_words = [
@@ -138,11 +140,13 @@ def calculate_progress(list_of_words: list,
 
 
 def format_learning_message(new_word: dict) -> str:
+    """форматировать сообщение об изученном слове"""
     return f"""✍  <em>{new_word['на русском']}</em> → <em>{new_word['на эсперанто']}</em>\n\n\
 <strong>Пример предложения:</strong>\n<em>{new_word['пример предложения']}</em>"""
 
 
 def format_repeating_message(word: dict) -> str:
+    """форматировать сообщение о повторении слова"""
     return f"""❓ Как будет <em>{word['на русском']}</em> на Эсперанто?\n\n\
 <strong>Ответ:</strong> <em><tg-spoiler>{word['на эсперанто']}</tg-spoiler></em>\n\n\
 <strong>Пример предложения:</strong>\n<em><tg-spoiler>{word['пример предложения']}\
@@ -150,6 +154,7 @@ def format_repeating_message(word: dict) -> str:
 
 
 def get_time_of_reminder(chat_id):
+    """получить время напоминания"""
     with open('users_data/reminders.json', encoding="utf-8") as f:
         reminders = json.load(f)
         try:

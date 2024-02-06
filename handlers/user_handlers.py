@@ -1,18 +1,15 @@
 """хендлеры"""
 import json
-import asyncio
-import aioschedule
 from os import makedirs
 from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import Command
-from lexicon.lexicon import HELP_COMMAND, get_profile_message, CONTACT, LINKS
+from lexicon.lexicon import HELP_COMMAND, get_profile_message, CONTACT, LINKS, get_time_of_reminder
 from keyboards.keyboards import *
 from config_data.config import bot
 import services.services as s
 
 router: Router = Router()
-statements = {}
 
 
 @router.message(Command(commands=["start"]))
@@ -96,7 +93,8 @@ async def reminder(message: Message):
     statements[str(chat_id)] = 2
     with open("users_data/statements.json", 'w', encoding="utf-8") as f:
         json.dump(statements, f)
-    await bot.send_message(text='Напиши время, в которое должно приходить напоминание, в формате <strong>чч:мм</strong>.\nЛибо удали напоминание',
+    exists_reminder = get_time_of_reminder(chat_id)
+    await bot.send_message(text=f'{exists_reminder}\n\nНапиши время, в которое должно приходить напоминание, в формате <strong>чч:мм</strong>.\nЛибо удали напоминание.',
                            chat_id=chat_id,
                            reply_markup=keyboard_set_reminder)
 
@@ -130,6 +128,6 @@ async def send_report(message: Message):
                 s.run_scheduler()
                 await bot.send_message(chat_id=chat_id, text="✅ Напоминание установлено. Ты можешь всегда изменить или удалить его.")
             else:
-                await bot.send_message(chat_id=chat_id, text="❌ Время введено некорректно! Введите время в формате <strong>чч:мм</strong>!")
+                await bot.send_message(chat_id=chat_id, text="❌ Время введено некорректно! Введи время в формате <strong>чч:мм</strong>!")
     except KeyError:
         pass

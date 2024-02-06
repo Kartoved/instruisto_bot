@@ -211,8 +211,9 @@ async def set_reminder(callback: CallbackQuery):
         statements[str(chat_id)] = 2
     with open("users_data/statements.json", 'w', encoding="utf-8") as f:
         json.dump(statements, f)
+    exists_reminder = l.get_time_of_reminder(chat_id)
     await callback.answer('')
-    await bot.send_message(text='Напиши время, в которое должно приходить напоминание, в формате <strong>чч:мм</strong>.\nЛибо удали напоминание',
+    await bot.send_message(text=f'{exists_reminder}\n\nНапиши время, в которое должно приходить напоминание, в формате <strong>чч:мм</strong>.\nЛибо удали напоминание',
                            chat_id=chat_id,
                            reply_markup=k.keyboard_set_reminder)
 
@@ -227,10 +228,8 @@ async def delete_reminder(callback: CallbackQuery):
             del reminders[str(chat_id)]
             with open("users_data/reminders.json", 'w', encoding="utf-8") as f:
                 json.dump(reminders, f)
-            await callback.message.delete()
-            await bot.send_message(text='✅ Напоминание удалено',
-                                   chat_id=chat_id,
-                                   reply_markup=k.keyboard_open_profile)
+            await callback.message.edit_text(text='✅ Напоминание удалено',
+                                             reply_markup=k.keyboard_open_profile)
         except KeyError:
             await callback.message.edit_text(text='У тебя и не было напоминаний',
                                              reply_markup=k.keyboard_open_profile)
