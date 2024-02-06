@@ -117,6 +117,8 @@ async def send_report(message: Message):
                 json.dump(statements, f)
             await bot.send_message(chat_id=chat_id,
                                    text="😊 Спасибо! Твоё сообщение направлено моему разработчику.")
+            await bot.send_message(chat_id=164720191,
+                                   text=f'Фидбек от {message.from_user.username}:\n\n{mes}',)
         elif statements[str(chat_id)] == 2:
             if s.check_input_time(mes):
                 reminders[f'{chat_id}'] = mes
