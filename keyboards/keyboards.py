@@ -63,7 +63,7 @@ btn_open_profile = InlineKeyboardButton(
     callback_data='stop'
 )
 
-keybord_start = InlineKeyboardMarkup(
+keyboard_start = InlineKeyboardMarkup(
     inline_keyboard=[[btn_open_profile], [btn_curve], [btn_about_repeating]]
 )
 

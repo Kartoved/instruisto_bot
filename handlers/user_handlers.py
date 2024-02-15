@@ -3,9 +3,9 @@ import json
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
-from lexicon.lexicon import HELP_COMMAND, get_profile_message, CONTACT, LINKS, get_time_of_reminder
-from keyboards.keyboards import *
 from config_data.config import bot
+import lexicon.lexicon as L
+import keyboards.keyboards as k
 import services.services as s
 
 router: Router = Router()
@@ -17,13 +17,13 @@ async def process_start_command(message: Message):
     chat_id: int = message.chat.id
     s.create_user_folders(chat_id)
     s.add_user_to_list(chat_id)
-    await message.answer(text=HELP_COMMAND, reply_markup=keybord_start)
+    await message.answer(text=L.HELP_COMMAND, reply_markup=k.keyboard_start)
 
 
 @router.message(Command(commands=["help"]))
 async def process_help_command(message: Message):
     '''вывод приветствия и справки'''
-    await message.answer(text=HELP_COMMAND, reply_markup=keybord_start)
+    await message.answer(text=L.HELP_COMMAND, reply_markup=k.keyboard_start)
 
 
 @router.message(Command(commands=["stop", "profile"]))
@@ -31,9 +31,11 @@ async def show_profile(message: Message):
     '''выводит профиль юзера'''
     chat_id: int = message.chat.id
     explored_words: list = s.import_words(chat_id, "explored_words")
-    text: str = get_profile_message(
+    text: str = L.get_profile_message(
         message.from_user.username, explored_words, chat_id)
-    await bot.send_message(chat_id=chat_id, text=text, reply_markup=keyboard_profile)
+    await bot.send_message(chat_id=chat_id,
+                           text=text,
+                           reply_markup=k.keyboard_profile)
 
 
 @router.message(Command(commands="learning"))
@@ -69,18 +71,18 @@ async def write_message_to_dev(message: Message):
     statements[chat_id] = 1
     with open("users_data/statements.json", 'w', encoding="utf-8") as f:
         json.dump(statements, f)
-    await bot.send_message(text=CONTACT,
+    await bot.send_message(text=L.CONTACT,
                            chat_id=chat_id,
-                           reply_markup=keyboard_cancel_report)
+                           reply_markup=k.keyboard_cancel_report)
 
 
 @router.message(Command(commands=["links"]))
 async def send_useful_links(message: Message):
     '''показать полезные ссылки'''
-    await bot.send_message(text=LINKS,
+    await bot.send_message(text=L.LINKS,
                            chat_id=message.chat.id,
                            disable_web_page_preview=True,
-                           reply_markup=keyboard_open_profile)
+                           reply_markup=k.keyboard_open_profile)
 
 
 @router.message(Command(commands=["reminders"]))
@@ -92,10 +94,10 @@ async def reminder(message: Message):
     statements[str(chat_id)] = 2
     with open("users_data/statements.json", 'w', encoding="utf-8") as f:
         json.dump(statements, f)
-    exists_reminder = get_time_of_reminder(chat_id)
+    exists_reminder = L.get_time_of_reminder(chat_id)
     await bot.send_message(text=f'{exists_reminder}\n\nНапиши время, в которое должно приходить напоминание, в формате <strong>чч:мм</strong>.\nЛибо удали напоминание.',
                            chat_id=chat_id,
-                           reply_markup=keyboard_set_reminder)
+                           reply_markup=k.keyboard_set_reminder)
 
 
 @router.message()

@@ -7,7 +7,7 @@ from aiogram.types import CallbackQuery
 from config_data.config import bot
 import keyboards.keyboards as k
 import services.services as s
-import lexicon.lexicon as l
+import lexicon.lexicon as L
 
 
 router = Router()
@@ -67,7 +67,7 @@ async def forgot(callback: CallbackQuery):
 async def tell_about_bot(callback: CallbackQuery):
     '''рассказывает о принципе работы бота'''
     await callback.answer('')
-    await bot.send_message(text=l.ABOUT_REPEATING,
+    await bot.send_message(text=L.ABOUT_REPEATING,
                            chat_id=callback.from_user.id,
                            reply_markup=k.keyboard_mnemo,
                            disable_web_page_preview=True)
@@ -77,7 +77,7 @@ async def tell_about_bot(callback: CallbackQuery):
 async def tell_about_mnemo(callback: CallbackQuery):
     '''рассказывает про мнемотехники'''
     await callback.answer('')
-    await bot.send_message(text=l.ABOUT_MNEMO,
+    await bot.send_message(text=L.ABOUT_MNEMO,
                            chat_id=callback.from_user.id,
                            disable_web_page_preview=True,
                            reply_markup=k.keyboard_open_profile)
@@ -87,9 +87,9 @@ async def tell_about_mnemo(callback: CallbackQuery):
 async def process_help_command(callback: CallbackQuery):
     '''справка со всеми командами'''
     await callback.answer('')
-    await bot.send_message(text=l.HELP_COMMAND,
+    await bot.send_message(text=L.HELP_COMMAND,
                            chat_id=callback.from_user.id,
-                           reply_markup=k.keybord_start)
+                           reply_markup=k.keyboard_start)
 
 
 @router.callback_query(F.data == 'start repeating')
@@ -124,7 +124,7 @@ async def stop_repeating(callback: CallbackQuery):
     chat_id: int = callback.from_user.id
     await callback.answer('')
     explored_words: list = s.import_words(chat_id, 'explored_words')
-    text: str = l.get_profile_message(
+    text: str = L.get_profile_message(
         callback.from_user.username, explored_words, chat_id)
     await bot.send_message(chat_id=chat_id,
                            text=text,
@@ -137,7 +137,7 @@ async def cancel_reset(callback: CallbackQuery):
     chat_id: int = callback.from_user.id
     await callback.answer('отмена')
     explored_words: list = s.import_words(chat_id, 'explored_words')
-    text: str = l.get_profile_message(callback.from_user.username,
+    text: str = L.get_profile_message(callback.from_user.username,
                                       explored_words,
                                       chat_id)
     await callback.message.edit_text(text=text, reply_markup=k.keyboard_profile)
@@ -159,7 +159,7 @@ async def cancel_report(callback: CallbackQuery):
 async def process_reset_progress(callback: CallbackQuery):
     '''запрашивает подтверждение сброса прогресса'''
     await callback.answer('')
-    await callback.message.edit_text(text=l.RESET_MESSAGE,
+    await callback.message.edit_text(text=L.RESET_MESSAGE,
                                      reply_markup=k.keyboard_reset)
 
 
@@ -186,7 +186,7 @@ async def write_message_to_dev(callback: CallbackQuery):
     with open("users_data/statements.json", 'w', encoding="utf-8") as f:
         json.dump(statements, f)
     await callback.answer('')
-    await bot.send_message(text=l.CONTACT,
+    await bot.send_message(text=L.CONTACT,
                            chat_id=chat_id,
                            reply_markup=k.keyboard_cancel_report)
 
@@ -197,7 +197,7 @@ async def send_useful_links(callback: CallbackQuery):
     explored_words: list = s.import_words(callback.from_user.id,
                                           'explored_words')
     await callback.answer('')
-    await bot.send_message(text=l.LINKS,
+    await bot.send_message(text=L.LINKS,
                            chat_id=callback.from_user.id,
                            disable_web_page_preview=True,
                            reply_markup=k.keyboard_open_profile)
@@ -212,7 +212,7 @@ async def set_reminder(callback: CallbackQuery):
         statements[str(chat_id)] = 2
     with open("users_data/statements.json", 'w', encoding="utf-8") as f:
         json.dump(statements, f)
-    exists_reminder = l.get_time_of_reminder(chat_id)
+    exists_reminder = L.get_time_of_reminder(chat_id)
     await callback.answer('')
     await bot.send_message(text=f'{exists_reminder}\n\nНапиши время, в которое должно приходить напоминание, в формате <strong>чч:мм</strong>.\nЛибо удали напоминание',
                            chat_id=chat_id,

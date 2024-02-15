@@ -6,17 +6,17 @@ from os import makedirs, rename, path
 from datetime import datetime, timedelta
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from config_data.config import bot
-from keyboards.keyboards import keyboard_add_word, keyboard_check_word, keyboard_open_profile, keyboard_repeating
-from lexicon.lexicon import format_learning_message, format_repeating_message
+import keyboards.keyboards as k
+import lexicon.lexicon as L
 
 
 async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
     '''выдаёт одно слово из списка неизученных'''
     if unexplored_words:
         new_word: dict = unexplored_words.pop(0)
-        await bot.send_message(text=format_learning_message(new_word),
+        await bot.send_message(text=L.format_learning_message(new_word),
                                chat_id=chat_id,
-                               reply_markup=keyboard_add_word)
+                               reply_markup=k.keyboard_add_word)
     else:
         new_word: dict = {}
         await bot.send_message(text="Все слова изучены. Новых слов нет.",
@@ -49,14 +49,14 @@ async def send_explored_word(chat_id: int, explored_words: list) -> dict:
     '''отправить пользователю изученное слово'''
     for word in explored_words:
         if datetime.strptime(word["дата повторения"], "%d-%m-%Y") <= datetime.now():
-            return await bot.send_message(text=format_repeating_message(word),
+            return await bot.send_message(text=L.format_repeating_message(word),
                                           chat_id=chat_id,
-                                          reply_markup=keyboard_check_word)
+                                          reply_markup=k.keyboard_check_word)
     date_of_closest_repetition = get_date_of_closest_repetition(explored_words)
     return await bot.send_message(text=f'📆 На сегодня слов для повторения нет.\n\n\
 Ближайшее повторение слов будет <strong> {date_of_closest_repetition}</strong>',
                                   chat_id=chat_id,
-                                  reply_markup=keyboard_open_profile)
+                                  reply_markup=k.keyboard_open_profile)
 
 
 def get_date_of_closest_repetition(explored_words: list) -> str:
@@ -177,4 +177,4 @@ async def send_message_cron(bot: bot, chat_id: int):
     '''присылает напоминание в указанное время'''
     await bot.send_message(chat_id,
                            text='Пора повторять слова!',
-                           reply_markup=keyboard_repeating)
+                           reply_markup=k.keyboard_repeating)
