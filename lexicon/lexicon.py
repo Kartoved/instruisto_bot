@@ -95,10 +95,10 @@ def get_date_of_closest_repetition(explored_words: list) -> str:
                 date_of_closest_repetition = datetime.strptime(
                     word["дата повторения"], "%d-%m-%Y")
         if date_of_closest_repetition.strftime("%d-%m-%Y") <= datetime.now().strftime("%d-%m-%Y"):
-            return 'сегодня.'
-        return date_of_closest_repetition.strftime("%d-%m-%Y")
+            return 'Ближайшая дата повторения <strong>сегодня</strong>.'
+        return f'Ближайшее повторение слов будет <strong> {date_of_closest_repetition.strftime("%d-%m-%Y")}</strong>'
     except IndexError:
-        return 'не назначена. Начните учить слова, чтобы их повторять.'
+        return 'Слов для повторения нет. Начните учить слова, чтобы их повторять.'
 
 
 def get_profile_message(username: str, list_name: str, chat_id: int) -> str:
@@ -121,7 +121,7 @@ def get_profile_message(username: str, list_name: str, chat_id: int) -> str:
 • знаешь хорошо <strong>{len(know_good)}</strong>\n\
 • знаешь отлично <strong>{len(know_perfect)}</strong>\n\n\
 📆 Сегодня слов для повторения: <strong>{counter}</strong>.\n\
-Ближайшая дата повторения <strong>{date_of_closest_repetition}</strong>\n
+{date_of_closest_repetition}\n
 {get_time_of_reminder(chat_id)}'''
 
 

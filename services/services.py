@@ -52,22 +52,11 @@ async def send_explored_word(chat_id: int, explored_words: list) -> dict:
             return await bot.send_message(text=L.format_repeating_message(word),
                                           chat_id=chat_id,
                                           reply_markup=k.keyboard_check_word)
-    date_of_closest_repetition = get_date_of_closest_repetition(explored_words)
-    return await bot.send_message(text=f'📆 На сегодня слов для повторения нет.\n\n\
-Ближайшее повторение слов будет <strong> {date_of_closest_repetition}</strong>',
+    date_of_closest_repetition = L.get_date_of_closest_repetition(explored_words)
+    return await bot.send_message(text=date_of_closest_repetition,
                                   chat_id=chat_id,
                                   reply_markup=k.keyboard_open_profile)
 
-
-def get_date_of_closest_repetition(explored_words: list) -> str:
-    '''получить дату ближайшего повторения'''
-    date_of_closest_repetition = datetime.strptime(
-        explored_words[0]["дата повторения"], "%d-%m-%Y")
-    for word in explored_words:
-        if datetime.strptime(word["дата повторения"], "%d-%m-%Y") < date_of_closest_repetition:
-            date_of_closest_repetition = datetime.strptime(
-                word["дата повторения"], "%d-%m-%Y")
-    return date_of_closest_repetition.strftime("%d-%m-%Y")
 
 
 def get_explored_word(explored_words: list) -> dict:
