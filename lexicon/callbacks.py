@@ -1,5 +1,6 @@
 '''коллбэки'''
 
+import json
 from shutil import rmtree
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
@@ -7,7 +8,6 @@ from config_data.config import bot
 import keyboards.keyboards as k
 import services.services as s
 import lexicon.lexicon as l
-import json
 
 
 router = Router()
@@ -178,6 +178,7 @@ async def accept_reset(callback: CallbackQuery):
 
 @router.callback_query(F.data == 'contact')
 async def write_message_to_dev(callback: CallbackQuery):
+    '''написать сообщение разработчику'''
     chat_id: int = callback.from_user.id
     with open("users_data/statements.json", encoding="utf-8") as f:
         statements = json.load(f)
@@ -220,6 +221,7 @@ async def set_reminder(callback: CallbackQuery):
 
 @router.callback_query(F.data == 'delete reminder')
 async def delete_reminder(callback: CallbackQuery):
+    '''удалить напоминание'''
     chat_id: int = callback.from_user.id
     await callback.answer('')
     with open("users_data/reminders.json", encoding="utf-8") as f:

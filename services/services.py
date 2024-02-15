@@ -1,17 +1,17 @@
-"""необходимые функции"""
+'''необходимые функции'''
 
 import json
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from os import makedirs, rename, path
 from shutil import copy
+from os import makedirs, rename, path
 from datetime import datetime, timedelta
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from config_data.config import bot
 from keyboards.keyboards import keyboard_add_word, keyboard_check_word, keyboard_open_profile, keyboard_repeating
 from lexicon.lexicon import format_learning_message, format_repeating_message
 
 
 async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
-    """выдаёт одно слово из списка неизученных"""
+    '''выдаёт одно слово из списка неизученных'''
     if unexplored_words:
         new_word: dict = unexplored_words.pop(0)
         await bot.send_message(text=format_learning_message(new_word),
@@ -25,7 +25,7 @@ async def get_unexplored_word(chat_id: int, unexplored_words: list) -> dict:
 
 
 def change_date(value: int) -> str:
-    """меняет дату повторения слова"""
+    '''меняет дату повторения слова'''
     date: datetime = datetime.now()
     date = date + timedelta(days=value)
     return date.strftime("%d-%m-%Y")
@@ -34,7 +34,7 @@ def change_date(value: int) -> str:
 def check_and_change_coefficient(word: dict,
                                  interval: int,
                                  remember: bool = False) -> dict:
-    """проверяет текущий интервал и изменяет его"""
+    '''проверяет текущий интервал и изменяет его'''
     if remember and interval < 6:
         interval += 1
     elif not remember and interval > 0:
@@ -46,7 +46,7 @@ def check_and_change_coefficient(word: dict,
 
 
 async def send_explored_word(chat_id: int, explored_words: list) -> dict:
-    """отправить пользователю изученное слово"""
+    '''отправить пользователю изученное слово'''
     for word in explored_words:
         if datetime.strptime(word["дата повторения"], "%d-%m-%Y") <= datetime.now():
             return await bot.send_message(text=format_repeating_message(word),
@@ -60,7 +60,7 @@ async def send_explored_word(chat_id: int, explored_words: list) -> dict:
 
 
 def get_date_of_closest_repetition(explored_words: list) -> str:
-    """получить дату ближайшего повторения"""
+    '''получить дату ближайшего повторения'''
     date_of_closest_repetition = datetime.strptime(
         explored_words[0]["дата повторения"], "%d-%m-%Y")
     for word in explored_words:
@@ -71,21 +71,21 @@ def get_date_of_closest_repetition(explored_words: list) -> str:
 
 
 def get_explored_word(explored_words: list) -> dict:
-    """получить слово из списка изученных"""
+    '''выдаёт слово из списка изученных'''
     for word in explored_words:
         if datetime.strptime(word["дата повторения"], "%d-%m-%Y") <= datetime.now():
             return word
 
 
 def import_words(chat_id: str, list_name: str) -> list:
-    """импортирует список слов в программу"""
+    '''импортирует список слов в программу'''
     with open(f"users_data/{chat_id}/{list_name}.json", encoding="utf-8") as f:
         list_of_words: list = json.load(f)
     return list_of_words
 
 
 def export_words(chat_id: str, list_of_words: list, list_name: str):
-    """экспортирует слова в выбранный список слов"""
+    '''экспортирует слова в выбранный список слов'''
     with open(
         f"users_data/{chat_id}/{list_name}.json", encoding="utf-8", mode="w"
     ) as f:
@@ -93,22 +93,22 @@ def export_words(chat_id: str, list_of_words: list, list_name: str):
 
 
 def create_admin_files():
-    """создает файлы для админа"""
+    '''создает файлы для админа'''
     makedirs("users_data", exist_ok=True)
     makedirs("reports", exist_ok=True)
     if not path.exists("users_data/statements.json"):
-        with open("users_data/statements.json", "w") as f:
+        with open("users_data/statements.json", "w", encoding="utf-8") as f:
             json.dump({}, f)
     if not path.exists("users_data/reminders.json"):
-        with open("users_data/reminders.json", "w") as f:
+        with open("users_data/reminders.json", "w", encoding="utf-8") as f:
             json.dump({}, f)
     if not path.exists("users_data/user_list.json"):
-        with open("users_data/user_list.json", "w") as f:
+        with open("users_data/user_list.json", "w", encoding="utf-8") as f:
             json.dump({}, f)
 
 
 def create_user_folders(chat_id: int):
-    """создаёт папку пользователя"""
+    '''создаёт папку пользователя'''
     if not path.exists(f"users_data/{chat_id}"):
         makedirs(f"users_data/{chat_id}", exist_ok=True)
         copy("services/dictionary.json", f"users_data/{chat_id}")
@@ -121,29 +121,29 @@ def create_user_folders(chat_id: int):
 
 
 def add_user_to_list(chat_id):
-    """добавляет юзера в список юзеров"""
+    '''добавляет юзера в список юзеров'''
     try:
-        with open("users_data/user_list.json") as f:
+        with open("users_data/user_list.json", encoding="utf-8") as f:
             user_list: list = json.load(f)
             if chat_id not in user_list:
                 user_list.append(chat_id)
-                with open("users_data/user_list.json", "w") as f:
+                with open("users_data/user_list.json", "w", encoding="utf-8") as f:
                     json.dump(user_list, f)
     except FileNotFoundError:
-        with open("users_data/user_list.json", "w") as f:
+        with open("users_data/user_list.json", "w", encoding="utf-8") as f:
             user_list: list = [chat_id]
             json.dump(user_list, f)
 
 
 def export_report(chat_id: int, report: str, username: str):
-    """экспортирует багрепорт в файл"""
+    '''экспортирует багрепорт в файл'''
     date = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
     with open(f"reports/{date}.txt", "w", encoding="utf-8") as f:
         f.write(f'from user: {username}\n\n"{report}"')
 
 
 def check_input_time(text: str) -> bool:
-    """проверяет введённое время"""
+    '''проверяет введённое время'''
     try:
         datetime.strptime(text, "%H:%M")
         return True
@@ -152,6 +152,7 @@ def check_input_time(text: str) -> bool:
 
 
 def run_scheduler():
+    '''запускает планировщик'''
     scheduler = AsyncIOScheduler()
     with open('users_data/reminders.json', 'r', encoding='utf-8') as f:
         reminders = json.load(f)
@@ -173,6 +174,7 @@ def run_scheduler():
 
 
 async def send_message_cron(bot: bot, chat_id: int):
+    '''присылает напоминание в указанное время'''
     await bot.send_message(chat_id,
                            text='Пора повторять слова!',
                            reply_markup=keyboard_repeating)

@@ -10,6 +10,7 @@ from services.services import create_admin_files, run_scheduler
 
 
 async def main():
+    '''точка входа в бота'''
     dp: Dispatcher = Dispatcher()
     dp.startup.register(set_main_menu)
     dp.include_router(user_handlers.router)
@@ -21,5 +22,5 @@ async def main():
     await dp.start_polling(bot)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(main())

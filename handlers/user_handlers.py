@@ -1,7 +1,6 @@
-"""хендлеры"""
+'''хендлеры'''
 import json
-from os import makedirs
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 from lexicon.lexicon import HELP_COMMAND, get_profile_message, CONTACT, LINKS, get_time_of_reminder
@@ -14,7 +13,7 @@ router: Router = Router()
 
 @router.message(Command(commands=["start"]))
 async def process_start_command(message: Message):
-    """запуск бота, создание необходимых файлов"""
+    '''запуск бота, создание необходимых файлов'''
     chat_id: int = message.chat.id
     s.create_user_folders(chat_id)
     s.add_user_to_list(chat_id)
@@ -23,13 +22,13 @@ async def process_start_command(message: Message):
 
 @router.message(Command(commands=["help"]))
 async def process_help_command(message: Message):
-    """вывод приветствия и справки"""
+    '''вывод приветствия и справки'''
     await message.answer(text=HELP_COMMAND, reply_markup=keybord_start)
 
 
 @router.message(Command(commands=["stop", "profile"]))
 async def show_profile(message: Message):
-    """выводит профиль юзера"""
+    '''выводит профиль юзера'''
     chat_id: int = message.chat.id
     explored_words: list = s.import_words(chat_id, "explored_words")
     text: str = get_profile_message(
@@ -39,7 +38,7 @@ async def show_profile(message: Message):
 
 @router.message(Command(commands="learning"))
 async def start_learning(message: Message):
-    """начать учить неизученные слова"""
+    '''начать учить неизученные слова'''
     chat_id: int = message.chat.id
     explored_words: list = s.import_words(chat_id, "explored_words")
     unexplored_words: list = s.import_words(chat_id, "unexplored_words")
@@ -55,7 +54,7 @@ async def start_learning(message: Message):
 
 @router.message(Command(commands="repeating"))
 async def start_repeating(message: Message):
-    """повторение изученных слов"""
+    '''повторение изученных слов'''
     chat_id: int = message.chat.id
     explored_words: list = s.import_words(chat_id, "explored_words")
     await s.send_explored_word(chat_id, explored_words)
@@ -63,7 +62,7 @@ async def start_repeating(message: Message):
 
 @router.message(Command(commands=["contact"]))
 async def write_message_to_dev(message: Message):
-    """написать сообщение разработчику"""
+    '''написать сообщение разработчику'''
     chat_id: int = message.chat.id
     with open("users_data/statements.json", encoding="utf-8") as f:
         statements: dict = json.load(f)
@@ -77,7 +76,7 @@ async def write_message_to_dev(message: Message):
 
 @router.message(Command(commands=["links"]))
 async def send_useful_links(message: Message):
-    """показать полезные ссылки"""
+    '''показать полезные ссылки'''
     await bot.send_message(text=LINKS,
                            chat_id=message.chat.id,
                            disable_web_page_preview=True,
@@ -101,6 +100,7 @@ async def reminder(message: Message):
 
 @router.message()
 async def send_report(message: Message):
+    '''послать сообщение разработчику'''
     chat_id: int = message.chat.id
     mes: str = message.text
     with open("users_data/statements.json", encoding="utf-8") as f:
@@ -126,8 +126,10 @@ async def send_report(message: Message):
                 with open("users_data/statements.json", 'w', encoding="utf-8") as f:
                     json.dump(statements, f)
                 s.run_scheduler()
-                await bot.send_message(chat_id=chat_id, text="✅ Напоминание установлено. Ты можешь всегда изменить или удалить его.")
+                await bot.send_message(chat_id=chat_id,
+                                       text="✅ Напоминание установлено. Ты можешь всегда изменить или удалить его.")
             else:
-                await bot.send_message(chat_id=chat_id, text="❌ Время введено некорректно! Введи время в формате <strong>чч:мм</strong>!")
+                await bot.send_message(chat_id=chat_id,
+                                       text="❌ Время введено некорректно! Введи время в формате <strong>чч:мм</strong>!")
     except KeyError:
         pass
