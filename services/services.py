@@ -93,7 +93,7 @@ def create_admin_files():
             json.dump({}, f)
     if not path.exists("users_data/user_list.json"):
         with open("users_data/user_list.json", "w", encoding="utf-8") as f:
-            json.dump({}, f)
+            json.dump([], f)
 
 
 def create_user_folders(chat_id: int):

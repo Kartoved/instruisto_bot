@@ -59,7 +59,7 @@ btn_about_repeating = InlineKeyboardButton(
 )
 
 btn_open_profile = InlineKeyboardButton(
-    text='👤 профиль',
+    text='👤 sinprezento',
     callback_data='stop'
 )
 
