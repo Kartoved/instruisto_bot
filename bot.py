@@ -4,7 +4,7 @@ import asyncio
 from aiogram import Dispatcher
 from config_data.config import bot
 from handlers import user_handlers
-from lexicon import callbacks
+from callbacks import callbacks
 from keyboards.set_menu import set_main_menu
 from services.services import create_admin_files, run_scheduler
 

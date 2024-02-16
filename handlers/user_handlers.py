@@ -105,7 +105,7 @@ async def reminder(message: Message):
 async def send_report(message: Message):
     '''послать сообщение разработчику'''
     chat_id: int = message.chat.id
-    mes: str = message.text
+    mes: str = message.html_text
     with open("users_data/statements.json", encoding="utf-8") as f:
         statements: dict = json.load(f)
     with open("users_data/reminders.json", encoding="utf-8") as f:
