@@ -21,13 +21,13 @@ async def process_start_command(message: Message):
     await message.answer(text=L.HELP_COMMAND, reply_markup=k.keyboard_start)
 
 
-@router.message(Command(commands=["help"]))
+@router.message(Command(commands=["helpo"]))
 async def process_help_command(message: Message):
     '''вывод приветствия и справки'''
     await message.answer(text=L.HELP_COMMAND, reply_markup=k.keyboard_start)
 
 
-@router.message(Command(commands=["stop", "profile"]))
+@router.message(Command(commands=["stop", "sinprezento"]))
 async def show_profile(message: Message):
     '''выводит профиль юзера'''
     chat_id: int = message.chat.id
@@ -39,7 +39,7 @@ async def show_profile(message: Message):
                            reply_markup=k.keyboard_profile)
 
 
-@router.message(Command(commands="learning"))
+@router.message(Command(commands="vortstudi"))
 async def start_learning(message: Message):
     '''начать учить неизученные слова'''
     chat_id: int = message.chat.id
@@ -55,7 +55,7 @@ async def start_learning(message: Message):
             s.export_words(chat_id, explored_words, "explored_words")
 
 
-@router.message(Command(commands="repeating"))
+@router.message(Command(commands="parkerigi"))
 async def start_repeating(message: Message):
     '''повторение изученных слов'''
     chat_id: int = message.chat.id
@@ -63,7 +63,7 @@ async def start_repeating(message: Message):
     await s.send_explored_word(chat_id, explored_words)
 
 
-@router.message(Command(commands=["contact"]))
+@router.message(Command(commands=["kontakti"]))
 async def write_message_to_dev(message: Message):
     '''написать сообщение разработчику'''
     chat_id: int = message.chat.id
@@ -77,7 +77,7 @@ async def write_message_to_dev(message: Message):
                            reply_markup=k.keyboard_cancel_report)
 
 
-@router.message(Command(commands=["links"]))
+@router.message(Command(commands=["ligiloj"]))
 async def send_useful_links(message: Message):
     '''показать полезные ссылки'''
     await bot.send_message(text=L.LINKS,
@@ -86,7 +86,7 @@ async def send_useful_links(message: Message):
                            reply_markup=k.keyboard_open_profile)
 
 
-@router.message(Command(commands=["reminders"]))
+@router.message(Command(commands=["memorigilo"]))
 async def reminder(message: Message):
     '''установить напоминание'''
     chat_id: int = message.chat.id
