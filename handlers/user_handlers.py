@@ -18,7 +18,11 @@ async def process_start_command(message: Message):
     chat_id: int = message.chat.id
     s.create_user_folders(chat_id)
     s.add_user_to_list(chat_id)
-    await message.answer(text=L.HELP_COMMAND, reply_markup=k.keyboard_start)
+    await bot.send_message(
+        text=f"Появился новый пользователь {message.from_user.username}",
+        chat_id=164720191
+    )
+    await message.answer(text=HELP_COMMAND, reply_markup=keybord_start)
 
 
 @router.message(Command(commands=["helpo"]))
