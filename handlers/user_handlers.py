@@ -22,7 +22,7 @@ async def process_start_command(message: Message):
         text=f"Появился новый пользователь {message.from_user.username}",
         chat_id=164720191
     )
-    await message.answer(text=HELP_COMMAND, reply_markup=keybord_start)
+    await message.answer(text=L.HELP_COMMAND, reply_markup=k.keyboard_start)
 
 
 @router.message(Command(commands=["helpo"]))
