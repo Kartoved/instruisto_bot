@@ -134,9 +134,9 @@ def calculate_progress(list_of_words: list,
         list_of_words = json.load(f)
         memorized_words = [
             word for word in list_of_words if word["интервал"] <= 1]
-        know_good = [word for word in list_of_words if 2 <
+        know_good = [word for word in list_of_words if 2 <=
                      word["интервал"] <= 3]
-        know_perfect = [word for word in list_of_words if 4 <
+        know_perfect = [word for word in list_of_words if 4 <=
                         word["интервал"] <= 6]
         return memorized_words, know_good, know_perfect
 
