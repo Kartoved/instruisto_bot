@@ -112,6 +112,9 @@ def create_admin_files():
     if not path.exists("users_data/user_list.json"):
         with open("users_data/user_list.json", "w", encoding="utf-8") as f:
             json.dump([], f)
+    if not path.exists("users_data/admin_list.json"):
+        with open("users_data/admin_list.json", "w", encoding="utf-8") as f:
+            json.dump([], f)
 
 
 def create_user_folders(chat_id: int):
@@ -175,7 +178,6 @@ def run_scheduler():
             ) <= datetime.now().strftime("%d-%m-%Y"):
                 who_needs_reminder.append(key)
     for man, value in reminders.items():
-        scheduler.remove_all_jobs()
         if man in who_needs_reminder:
             # scheduler.remove_all_jobs()
             scheduler.add_job(
