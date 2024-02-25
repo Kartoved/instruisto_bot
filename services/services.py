@@ -167,8 +167,6 @@ def check_input_time(text: str) -> bool:
 
 def run_scheduler(scheduler):
     """запускает планировщик"""
-    print(32)
-
     with open("users_data/reminders.json", "r", encoding="utf-8") as f:
         reminders = json.load(f)
     who_needs_reminder: list = []
@@ -182,7 +180,6 @@ def run_scheduler(scheduler):
                 who_needs_reminder.append(key)
     for man, value in reminders.items():
         if man in who_needs_reminder:
-            print(man)
             scheduler.add_job(
                 send_message_cron,
                 trigger="cron",
@@ -192,7 +189,6 @@ def run_scheduler(scheduler):
                 kwargs={"bot": bot, "chat_id": man},
             )
     scheduler.start()
-    print(scheduler.get_jobs())
 
 
 def add_job_to_scheduler(scheduler, mes, chat_id):
