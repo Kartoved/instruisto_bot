@@ -230,6 +230,8 @@ async def delete_reminder(callback: CallbackQuery):
             del reminders[str(chat_id)]
             with open("users_data/reminders.json", 'w', encoding="utf-8") as f:
                 json.dump(reminders, f)
+            s.scheduler.remove_job(str(chat_id))
+            print(s.scheduler.get_jobs())
             await callback.message.edit_text(text='✅ Напоминание удалено',
                                              reply_markup=k.keyboard_open_profile)
         except KeyError:

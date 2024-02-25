@@ -10,7 +10,9 @@ import keyboards.keyboards as k
 import lexicon.lexicon as L
 
 
-# функции для хендлеров и коллбэков
+scheduler = AsyncIOScheduler()
+with open("users_data/admin_list.json", encoding="utf-8") as f:
+    admin_list = json.load(f)
 
 
 # асинхронные функции
@@ -163,9 +165,10 @@ def check_input_time(text: str) -> bool:
         return False
 
 
-def run_scheduler():
+def run_scheduler(scheduler):
     """запускает планировщик"""
-    scheduler = AsyncIOScheduler()
+    print(32)
+
     with open("users_data/reminders.json", "r", encoding="utf-8") as f:
         reminders = json.load(f)
     who_needs_reminder: list = []
@@ -179,12 +182,49 @@ def run_scheduler():
                 who_needs_reminder.append(key)
     for man, value in reminders.items():
         if man in who_needs_reminder:
-            # scheduler.remove_all_jobs()
+            print(man)
             scheduler.add_job(
                 send_message_cron,
                 trigger="cron",
                 hour=value[0:2],
                 minute=value[3:5],
+                id=man,
                 kwargs={"bot": bot, "chat_id": man},
             )
     scheduler.start()
+    print(scheduler.get_jobs())
+
+
+def add_job_to_scheduler(scheduler, mes, chat_id):
+    """добавляет задание в планировщик"""
+    scheduler.add_job(
+        send_message_cron,
+        trigger="cron",
+        hour=mes[0:2],
+        minute=mes[3:5],
+        id=str(chat_id),
+        replace_existing=True,
+        kwargs={"bot": bot, "chat_id": chat_id},
+    )
+
+
+async def send_message_to_all_users(mes):
+    with open("users_data/user_list.json", encoding="utf-8") as f:
+        user_list = json.load(f)
+    for user in user_list:
+        await bot.send_message(chat_id=user, text=mes[4:])
+
+
+async def send_message_to_dev(mes, chat_id, statements):
+    statements[f"{chat_id}"] = 0
+    with open("users_data/statements.json", "w", encoding="utf-8") as f:
+        json.dump(statements, f)
+    await bot.send_message(
+        chat_id=chat_id,
+        text="😊 Спасибо! Твоё сообщение направлено моему разработчику.",
+    )
+    for admin in admin_list:
+        await bot.send_message(
+            chat_id=admin,
+            text=f"Фидбек от {mes.from_user.username}:\n\n{mes}",
+        )
