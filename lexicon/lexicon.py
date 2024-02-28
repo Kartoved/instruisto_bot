@@ -1,6 +1,6 @@
 """различный текст для бота"""
 
-from datetime import datetime
+from datetime import datetime, date
 import json
 
 
@@ -120,19 +120,19 @@ def get_date_of_closest_repetition(explored_words: list) -> str:
 
 def get_profile_message(username: str, list_name: str, chat_id: int) -> str:
     """получить сообщение профиля"""
-    now = datetime.now().strftime("%d-%m-%Y")
+    today = date.today()
     counter = 0
     memorized_words, know_good, know_perfect = calculate_progress(list_name, chat_id)
     with open(f"users_data/{chat_id}/explored_words.json", encoding="utf-8") as f:
         list_of_words = json.load(f)
     date_of_closest_repetition = get_date_of_closest_repetition(list_of_words)
     for word in list_name:
-        if word["дата повторения"] <= now:
+        if datetime.strptime(word['дата повторения'], "%d-%m-%Y").date() <= today:
             counter += 1
     return f"""👤 Твой профиль: <strong>{username}</strong>\n\n\
 📊 Статистика (в количестве слов):\n• изучил \
 <strong>{len(know_good)+len(know_perfect)} из 1194 </strong>\
-({round(len(know_perfect)/1194*100)+round(len(know_good)/1194*10, 2)}%) \n\
+({round(len(know_perfect)/1194*100, 2)+round(len(know_good)/1194*10, 2)}%) \n\
 • начал учить <strong>{len(memorized_words)}</strong>\n\
 • знаешь хорошо <strong>{len(know_good)}</strong>\n\
 • знаешь отлично <strong>{len(know_perfect)}</strong>\n\n\
