@@ -1,13 +1,24 @@
 """необходимые функции"""
 
 import json
-from shutil import copy
+from shutil import copy, make_archive
+from aiogram.types import FSInputFile
 from os import makedirs, rename, path
 from datetime import datetime, timedelta
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from config_data.config import bot
 import keyboards.keyboards as k
-import lexicon.lexicon as L
+
+
+async def send_archive(admins_ids):
+    """отправить архив"""
+    backup = make_archive(
+        base_name="backup", format="zip", root_dir="users_data", base_dir="."
+    )
+    for admin in admins_ids:
+        await bot.send_document(
+            chat_id=admin, document=FSInputFile(backup), caption="#бэкап данных юзеров"
+        )
 
 
 scheduler = AsyncIOScheduler()
@@ -211,7 +222,7 @@ async def send_message_to_all_users(mes):
         await bot.send_message(chat_id=user, text=mes[4:])
 
 
-async def send_message_to_dev(mes, chat_id, statements):
+async def send_message_to_dev(mes, chat_id, statements, admin_list):
     statements[f"{chat_id}"] = 0
     with open("users_data/statements.json", "w", encoding="utf-8") as f:
         json.dump(statements, f)
@@ -222,5 +233,5 @@ async def send_message_to_dev(mes, chat_id, statements):
     for admin in admin_list:
         await bot.send_message(
             chat_id=admin,
-            text=f"Фидбек от {mes.from_user.username}:\n\n{mes}",
+            text=f"Фидбек от https://t.me/{mes.from_user.username}: \n\n{mes.html_text}",
         )

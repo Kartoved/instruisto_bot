@@ -114,8 +114,9 @@ async def send_message(message: Message):
     mes: str = message.html_text
     with open("users_data/admin_list.json", encoding="utf-8") as f:
         admin_list = json.load(f)
-    if chat_id in admin_list and message.text[:4:] == "@all":
-        print(42)
+    if chat_id in admin_list and message.text == "#backup":
+        await s.send_archive(admin_list)
+    if chat_id in admin_list and message.text[:4:] == "#all":
         await s.send_message_to_all_users(mes)
     else:
         with open("users_data/statements.json", encoding="utf-8") as f:
@@ -124,7 +125,7 @@ async def send_message(message: Message):
             reminders = json.load(f)
         if statements[str(chat_id)] == 1:
             s.export_report(chat_id, mes, message.from_user.username)
-            s.send_message_to_dev(mes, chat_id, statements, admin_list)
+            await s.send_message_to_dev(message, chat_id, statements, admin_list)
         elif statements[str(chat_id)] == 2:
             if s.check_input_time(mes):
                 reminders[f"{chat_id}"] = mes
