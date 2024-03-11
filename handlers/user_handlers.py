@@ -115,7 +115,8 @@ async def send_message(message: Message):
     with open("users_data/admin_list.json", encoding="utf-8") as f:
         admin_list = json.load(f)
     if chat_id in admin_list and message.text[:4:] == "@all":
-        s.send_message_to_all_users(mes)
+        print(42)
+        await s.send_message_to_all_users(mes)
     else:
         with open("users_data/statements.json", encoding="utf-8") as f:
             statements: dict = json.load(f)
