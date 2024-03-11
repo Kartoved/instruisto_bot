@@ -9,6 +9,36 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from config_data.config import bot
 import keyboards.keyboards as k
 
+scheduler = AsyncIOScheduler()
+with open("users_data/admin_list.json", encoding="utf-8") as f:
+    admin_list = json.load(f)
+
+# backup = make_archive(
+#         base_name="backup", format="zip", root_dir="users_data", base_dir="."
+#     )
+
+
+# async def send_archive_to_dev(bot: bot, admins_ids):
+#     """отправить архив"""
+#     backup = make_archive(
+#         base_name="backup", format="zip", root_dir="users_data", base_dir="."
+#     )
+#     for admin in admins_ids:
+#         await bot.send_document(
+#             chat_id=admin, document=FSInputFile(backup), caption="#бэкап данных юзеров"
+#         )
+
+
+# for admin in admin_list:
+#     scheduler.add_job(
+#         send_archive_to_dev,
+#         trigger="cron",
+#         hour=00,
+#         minute=00,
+#         replace_existing=True,
+#         kwargs={"bot": bot, "chat_id": admin},
+#     )
+
 
 async def send_archive(admins_ids):
     """отправить архив"""
@@ -233,5 +263,5 @@ async def send_message_to_dev(mes, chat_id, statements, admin_list):
     for admin in admin_list:
         await bot.send_message(
             chat_id=admin,
-            text=f"Фидбек от https://t.me/{mes.from_user.username}: \n\n{mes.html_text}",
+            text=f"#Фидбек от https://t.me/{mes.from_user.username}: \n\n{mes.html_text}",
         )
