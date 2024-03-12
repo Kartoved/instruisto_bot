@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from config_data.config import bot
 import keyboards.keyboards as k
+import lexicon.lexicon as L
 
 scheduler = AsyncIOScheduler()
 with open("users_data/admin_list.json", encoding="utf-8") as f:
